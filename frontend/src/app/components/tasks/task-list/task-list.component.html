@@ -1,0 +1,18 @@
+<div>
+  <p-treeTable [value]="tasks" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}">
+
+    <ng-template pTemplate="body" let-node let-rowData="rowData">
+      <tr>
+        <td>
+          <p-treeTableToggler [rowNode]="node"></p-treeTableToggler>
+          {{ rowData.name }}
+        </td>
+        <td>{{ rowData.status }}</td>
+        <td>{{ rowData.priority }}</td>
+        <td>{{ rowData.dueDate }}</td>
+        <td>{{ rowData.assignee }}</td>
+      </tr>
+    </ng-template>
+    
+  </p-treeTable>
+</div>

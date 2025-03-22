@@ -1,0 +1,32 @@
+<div class="flex justify-content-center align-items-center min-h-screen">
+  <p-card header="Регистрация" [style]="{ width: '400px' }">
+    <form>
+      <div class="field">
+        <label for="username">Имя пользователя</label>
+        <input pInputText class="w-full">
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input pInputText class="w-full">
+      </div>
+
+      <div class="field">
+        <label for="password">Пароль</label>
+        <input pInputText class="w-full">
+      </div>
+
+      <div class="field">
+        <label for="confirm-password">Подтвердите пароль</label>
+        <input pInputText class="w-full">
+      </div>
+
+      <p-button
+      type="submit"
+      label="Регистрация"
+      styleClass="w-full"
+      [disabled]="true"
+    ></p-button>
+    </form>
+  </p-card>
+</div>

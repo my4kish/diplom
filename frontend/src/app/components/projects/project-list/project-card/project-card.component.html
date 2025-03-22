@@ -1,0 +1,16 @@
+<p-card [style]="{ width: '25rem', overflow: 'hidden' }">
+  <ng-template #title> (Название проекта) </ng-template>
+  <ng-template #subtitle> (Описание задачи) </ng-template>
+  <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt
+      quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!
+  </p>
+  <ng-template #footer>
+      <div class="flex gap-4 mt-1">
+          <!-- <p-button label="Просмотреть задачи" severity="primary" class="w-full" styleClass="w-full" /> -->
+          <a [routerLink]="projectLink" class="p-button font-bold w-full ">
+            Просмотреть задачи
+        </a>
+      </div>
+  </ng-template>
+</p-card>

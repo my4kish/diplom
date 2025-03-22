@@ -1,0 +1,36 @@
+@import "primeicons/primeicons.css";
+
+.ubuntu-mono-regular {
+  font-family: "Ubuntu Mono", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ubuntu-mono-bold {
+  font-family: "Ubuntu Mono", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ubuntu-mono-regular-italic {
+  font-family: "Ubuntu Mono", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.ubuntu-mono-bold-italic {
+  font-family: "Ubuntu Mono", serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Nunito", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
