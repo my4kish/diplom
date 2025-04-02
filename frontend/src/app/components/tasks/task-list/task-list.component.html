@@ -1,18 +1,84 @@
-<div>
-  <p-treeTable [value]="tasks" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}">
-
-    <ng-template pTemplate="body" let-node let-rowData="rowData">
-      <tr>
-        <td>
-          <p-treeTableToggler [rowNode]="node"></p-treeTableToggler>
-          {{ rowData.name }}
-        </td>
-        <td>{{ rowData.status }}</td>
-        <td>{{ rowData.priority }}</td>
-        <td>{{ rowData.dueDate }}</td>
-        <td>{{ rowData.assignee }}</td>
-      </tr>
-    </ng-template>
-    
-  </p-treeTable>
+<div class="kanban">
+  <div class="kanban-container">
+    <p-panel header="New" [toggleable]="true">
+      <div
+        class="kanban-column"
+        id="new"
+        cdkDropList
+        #newList="cdkDropList"
+        [cdkDropListData]="new"
+        [cdkDropListConnectedTo]="[inProgressList, completedList, overdueList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of new; track item) {
+        <div class="task-box" *ngIf="item.status === 'new'" cdkDrag>
+          <p-card header="{{ item.title }}" >
+            <p class="m-0">{{ item.description }}</p>
+            <p class="m-0">Status: {{ item.status }}</p>
+          </p-card>
+        </div>
+        }
+      </div>
+    </p-panel>
+    <p-panel header="In progress" [toggleable]="true">
+      <div
+        class="kanban-column"
+        id="in_progress"
+        cdkDropList
+        #inProgressList="cdkDropList"
+        [cdkDropListData]="inProgress"
+        [cdkDropListConnectedTo]="[newList, completedList, overdueList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of inProgress; track item) {
+        <div class="task-box" *ngIf="item.status === 'in_progress'" cdkDrag>
+          <p-card header="{{ item.title }}">
+            <p class="m-0">{{ item.description }}</p>
+            <p class="m-0">Status: {{ item.status }}</p>
+          </p-card>
+        </div>
+        }
+      </div>
+    </p-panel>
+    <p-panel header="Completed" [toggleable]="true">
+      <div
+        class="kanban-column"
+        id="completed"
+        cdkDropList
+        #completedList="cdkDropList"
+        [cdkDropListData]="completed"
+        [cdkDropListConnectedTo]="[newList, inProgressList, overdueList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of completed; track item) {
+        <div class="task-box" *ngIf="item.status === 'completed'" cdkDrag>
+          <p-card header="{{ item.title }}">
+            <p class="m-0">{{ item.description }}</p>
+            <p class="m-0">Status: {{ item.status }}</p>
+          </p-card>
+        </div>
+        }
+      </div>
+    </p-panel>
+    <p-panel header="Overdue" [toggleable]="true">
+      <div
+        class="kanban-column"
+        id="overdue"
+        cdkDropList
+        #overdueList="cdkDropList"
+        [cdkDropListData]="overdue"
+        [cdkDropListConnectedTo]="[newList, inProgressList, completedList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of overdue; track item) {
+        <div class="task-box" *ngIf="item.status === 'overdue'" cdkDrag>
+          <p-card header="{{ item.title }}">
+            <p class=" m-0">{{ item.description }}</p>
+            <p class="m-0">Status: {{ item.status }}</p>
+          </p-card>
+        </div>
+        }
+      </div>
+    </p-panel>
+  </div>
 </div>

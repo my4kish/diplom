@@ -1,16 +1,15 @@
-<p-card [style]="{ width: '25rem', overflow: 'hidden' }">
-  <ng-template #title> (Название проекта) </ng-template>
-  <ng-template #subtitle> (Описание задачи) </ng-template>
+<p-card>
+  <ng-template #title> {{ project.name }} </ng-template>
+  <ng-template #subtitle> {{ project.status }} </ng-template>
   <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt
-      quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!
+    {{ project.description }}
   </p>
   <ng-template #footer>
-      <div class="flex gap-4 mt-1">
-          <!-- <p-button label="Просмотреть задачи" severity="primary" class="w-full" styleClass="w-full" /> -->
+      <div class="flex gap-2 mt-1">
           <a [routerLink]="projectLink" class="p-button font-bold w-full ">
             Просмотреть задачи
-        </a>
+          </a>
+          <button pButton type="button" label="Удалить" icon="pi pi-trash" class="p-button-danger font-bold w-5"></button>
       </div>
   </ng-template>
 </p-card>

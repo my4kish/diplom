@@ -1,15 +1,7 @@
-<div class="flex flex-wrap gap-4 justify-content-center mt-5">
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
-  <app-project-card></app-project-card>
+<div class="flex flex-column align-items-center">
+  <div class="flex flex-row gap-3 mt-3">
+    <div *ngFor="let item of projects">
+      <app-project-card [project] = "item" ></app-project-card>
+    </div>
+  </div>
 </div>
