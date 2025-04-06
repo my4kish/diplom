@@ -1,0 +1,12 @@
+
+.notification-describe {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notification-card {
+  --p-card-body-padding: 0.5rem;
+  // --p-card-shadow: 0;
+}

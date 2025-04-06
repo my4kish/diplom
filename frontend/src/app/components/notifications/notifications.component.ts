@@ -11,10 +11,12 @@ import { NotificationService } from '../../services/notifiaction.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-notifications',
-  imports: [DrawerModule, CardModule],
+  imports: [DrawerModule, CardModule, ButtonModule, AvatarModule],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

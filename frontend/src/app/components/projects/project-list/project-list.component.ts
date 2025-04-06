@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ProjectCardComponent } from './project-card/project-card.component';
 import { CommonModule } from '@angular/common';
+import { SpeedDialModule } from 'primeng/speeddial';
 
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectCardComponent, CommonModule],
+  imports: [ProjectCardComponent, CommonModule, SpeedDialModule],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

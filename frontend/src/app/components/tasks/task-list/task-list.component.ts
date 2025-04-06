@@ -10,7 +10,8 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Task } from '../../../interfaces/tasks';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-task-list',
@@ -21,6 +22,8 @@ import { Task } from '../../../interfaces/tasks';
     PanelModule,
     CommonModule,
     BadgeModule,
+    AvatarGroupModule,
+    AvatarModule,
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
