@@ -1,7 +1,20 @@
 <div class="flex justify-content-between align-items-center shadow-1 px-4 py-2">
   <div class="flex align-items-center gap-4">
+    <div class="logo flex">
+      <svg width="80" height="40" viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          .text { font-family: 'Segoe UI', sans-serif; font-weight: bold; font-size: 24px; fill: #2D3748; }
+          .dot { fill: #4FD1C5; }
+        </style>
+        <rect width="100%" height="100%" fill="white"/>
+        <text x="10" y="28" class="text">BCD</text>
+        <circle cx="70" cy="20" r="4" class="dot" />
+      </svg>
+    </div>
     <a href="/main" class="text-xl">Главная</a>
-    <p-button
+    <a href="/projects" class="text-xl">Проекты</a>
+    <a href="/projects/:id/tasks" class="text-xl">Мои задачи</a>
+    <!-- <p-button
       severity="contrast"
       (click)="navigateProjects()"
       label="Emails"
@@ -10,9 +23,9 @@
       label="Проекты"
       icon="pi pi-folder"
       outlined
-    />
+    /> -->
   </div>
-  <div class="flex align-items-center gap-2 py-1">
+  <div class="flex align-items-center gap-3 py-1">
     <input type="text" pInputText placeholder="Поиск" />
     <p-button icon="pi pi-plus" [rounded]="true" severity="success" />
     <p-overlaybadge value="2" severity="contrast" badgeSize="small">
