@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,7 +7,8 @@ import { InputTextModule } from 'primeng/inputtext';
   selector: 'app-project-form',
   imports: [Dialog, ButtonModule, InputTextModule],
   templateUrl: './project-form.component.html',
-  styleUrl: './project-form.component.scss'
+  styleUrl: './project-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectFormComponent {
 

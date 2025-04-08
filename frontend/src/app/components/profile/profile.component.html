@@ -1,5 +1,24 @@
-<div class="flex flex-column justify-content-center">
-
-  <p class="mx-3 mb-0 text-xl">Настройки профиля</p>
-  
+<div class="flex flex-column justify-content-center mt-1">
+  <div class="card">
+    <p-tabs value="0" scrollable>
+      <p-tablist>
+        <p-tab value="0">
+          <i class="pi pi-user text-xl"></i>
+          <span class="font-bold whitespace-nowrap">Основная информация</span>
+        </p-tab>
+        <p-tab value="1">
+          <i class="pi pi-cog text-xl"></i>
+          <span class="font-bold whitespace-nowrap">Настройки</span>
+        </p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0"> 
+          <app-profile-general></app-profile-general>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+          <app-profile-settings></app-profile-settings>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
 </div>

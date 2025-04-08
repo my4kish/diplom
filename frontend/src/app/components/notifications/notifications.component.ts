@@ -13,10 +13,11 @@ import { finalize } from 'rxjs';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-notifications',
-  imports: [DrawerModule, CardModule, ButtonModule, AvatarModule],
+  imports: [DrawerModule, CardModule, ButtonModule, AvatarModule, RouterLink],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

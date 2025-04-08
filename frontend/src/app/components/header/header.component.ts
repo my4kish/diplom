@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
       },
       {
         label: 'Проекты',
-        icon: 'pi pi-search',
+        icon: 'pi pi-folder',
         badge: '5',
         command: () => this.router.navigate(['/projects']),
       },
