@@ -9,11 +9,16 @@
       <div class="flex flex-column gap-2">
         <p class="m-0 text-xl text-500">Исполнитель</p>
         <div class="flex align-items-center gap-2">
-          <p-avatar
-            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-            shape="circle"
-          />
-          <p class="m-0 text-xl text-900">Имя Фамилия</p>
+          <ng-container *ngIf="usersLength === 1; else moreUsers">
+            <p-avatar
+              image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+              shape="circle"
+            />
+            <p class="m-0 text-xl text-900">Имя Фамилия</p>
+          </ng-container>
+          <ng-template #moreUsers>
+            <app-users-group-tooltip></app-users-group-tooltip>
+          </ng-template>
         </div>
       </div>
       <div class="flex flex-column gap-2">
@@ -56,10 +61,9 @@
     </p>
     <p-divider />
     <p class="text-2xl font-bold text-900">Вложения</p>
-    <p>
-      Фото, Видео, Аудио, PDF
-    </p>
+    <p>Фото</p>
     <p-divider />
     <app-task-comments-list></app-task-comments-list>
+    <p-divider />
   </p-panel>
 </div>
