@@ -1,27 +1,42 @@
 <p-card>
-  <p class="text-2xl font-bold">{{ project.name }}</p>
-  <p>
-    Status:
+  <div class="flex align-items-center justify-content-between">
+    <p class="text-2xl font-bold m-0">{{ project.name }}</p>
+    <p-button
+      icon="pi pi-pencil"
+      variant="text"
+      [raised]="true"
+      [rounded]="true"
+    ></p-button>
+  </div>
+  <p class="mb-0 mt-2 text-500">
+    Статус:
     <p-tag
       [value]="switchStatus(project.status)"
       [severity]="getSeverity(project.status)"
     />
   </p>
-  <p>
+  <p class="description mt-3 mb-1 max-w-18rem h-4rem text-justify">
     {{ project.description }}
   </p>
   <ng-template #footer>
     <div class="flex gap-2 mt-1">
-      <a [routerLink]="projectLink" class="p-button font-bold w-full">
-        Просмотреть задачи
-      </a>
-      <button
+      <a
+        [routerLink]="projectLink"
+        [style]="{ padding: '0.25rem 1rem' }"
         pButton
-        type="button"
-        label="Удалить"
+        [raised]="true"
+        severity="warn"
+        >Посмотреть задачи</a
+      >
+      <p-button
+        [style]="{ padding: '0.25rem 1rem' }"
         icon="pi pi-trash"
-        class="p-button-danger font-bold w-5"
-      ></button>
+        label="Удалить"
+        severity="danger"
+        variant="outlined"
+        [raised]="true"
+      ></p-button>
     </div>
   </ng-template>
+  <p class="mb-0 mt-2 text-500 text-xs">Создан: 20 май, 2025</p>
 </p-card>

@@ -9,6 +9,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { TaskCardComponent } from './task-card/task-card.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-task-list',
@@ -18,6 +19,7 @@ import { TaskCardComponent } from './task-card/task-card.component';
     PanelModule,
     CommonModule,
     TaskCardComponent,
+    ButtonModule
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',

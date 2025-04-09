@@ -1,15 +1,21 @@
 import { Component, Input } from '@angular/core';
-import { AvatarModule } from 'primeng/avatar';
-import { AvatarGroup } from 'primeng/avatargroup';
 import { Card } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { ChipModule } from 'primeng/chip';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { UsersGroupTooltipComponent } from '../../../shared/users-group-tooltip/users-group-tooltip.component';
 
 @Component({
   selector: 'app-task-card',
-  imports: [CommonModule, Card, AvatarModule, AvatarGroup, TagModule, ChipModule, RouterLink],
+  imports: [
+    CommonModule,
+    Card,
+    TagModule,
+    ChipModule,
+    RouterLink,
+    UsersGroupTooltipComponent,
+  ],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss',
 })
@@ -33,7 +39,7 @@ export class TaskCardComponent {
   }
 
   getPriorityColor(priority: string): string {
-    switch(priority) {
+    switch (priority) {
       case 'high':
         return 'rgba(255, 0, 0, 0.5)';
       case 'medium':
@@ -44,7 +50,6 @@ export class TaskCardComponent {
         return 'rgba(128, 128, 128, 0.5)';
     }
   }
-  
 
   switchStatus(status: string) {
     switch (status) {

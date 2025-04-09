@@ -20,6 +20,8 @@
   "email": "email@example.com",
   "password": "хэшированный_пароль",
   "role": "manager | employee | admin",
+  "position": "Должность",
+  "avatarUrl": "url",
   "projects": [ObjectId], // ссылки на проекты
   "tasks": [ObjectId],    // задачи, назначенные пользователю
   "createdAt": ISODate,
@@ -53,14 +55,9 @@
   "status": "new | in_progress | completed | overdue",
   "priority": "low | medium | high",
   "dueDate": ISODate,
-  "assignedTo": ObjectId,  // ссылка на пользователя
+  "imgUrls": ["url1", "url2", ]
+  "assignedTo": [ObjectId],  // ссылка на пользователя
   "projectId": ObjectId,   // ссылка на проект
-  "subtasks": [
-    {
-      "title": "Подзадача 1",
-      "isCompleted": false
-    }
-  ],
   "comments": [ObjectId],   // комментарии к задаче
   "createdAt": ISODate,
   "updatedAt": ISODate
@@ -83,6 +80,7 @@
 {
   "_id": ObjectId,
   "userId": ObjectId,       // ссылка на получателя
+  "contentType": "",
   "message": "Текст уведомления",
   "isRead": false,
   "createdAt": ISODate

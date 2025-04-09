@@ -6,6 +6,7 @@ import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { UsersGroupTooltipComponent } from '../shared/users-group-tooltip/users-group-tooltip.component';
 
 @Component({
   selector: 'app-main',
@@ -17,6 +18,7 @@ import { TagModule } from 'primeng/tag';
     TagModule,
     RouterLink,
     PanelModule,
+    UsersGroupTooltipComponent,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
@@ -29,37 +31,37 @@ export class MainComponent {
       name: 'Сделать отчёт',
       status: 'in_progress',
       project: 'CRM система',
-      assignee: 'Айгүл',
+      assignee: ['Айгүл', 'Анау', 'Мынау'],
     },
     {
       name: 'Починить баг',
       status: 'completed',
       project: 'Сайт компании',
-      assignee: 'Нурлан',
+      assignee: ['Нурлан', 'Анау'],
     },
     {
       name: 'Добавить фильтры',
       status: 'new',
       project: 'Панель администратора',
-      assignee: 'Данияр',
+      assignee: ['Данияр', 'Анау', 'Мынау'],
     },
     {
       name: 'что то просроченное',
       status: 'overdue',
       project: 'project',
-      assignee: 'aaaa',
+      assignee: ['aaaa', 'Анау'],
     },
     {
       name: 'что то просроченное',
       status: 'overdue',
       project: 'project',
-      assignee: 'aaaa',
+      assignee: ['aaaa', 'Анау', 'Мынау', 'Мыны'],
     },
     {
       name: 'что то просроченное',
       status: 'overdue',
       project: 'project',
-      assignee: 'aaaa',
+      assignee: ['aaaa', 'Анау', 'Мынау'],
     },
   ];
 

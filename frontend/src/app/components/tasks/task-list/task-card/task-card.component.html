@@ -1,4 +1,4 @@
-<p-card routerLink="/task/:id" class="cursor-pointer">
+<p-card routerLink="/task/:id" class="task-card cursor-pointer">
   <div class="flex gap-8">
     <p class="mb-1 mt-0 mx-0 text-xl font-bold">{{ item.title }}</p>
     <p-chip
@@ -14,21 +14,7 @@
     />
   </p>
   <div class="flex align-items-center justify-content-between mt-2">
-    <p-avatar-group>
-      <p-avatar
-        image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-        shape="circle"
-      />
-      <p-avatar
-        image="https://primefaces.org/cdn/primeng/images/demo/avatar/asiyajavayant.png"
-        shape="circle"
-      />
-      <p-avatar
-        image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
-        shape="circle"
-      />
-      <p-avatar label="+2" shape="circle" />
-    </p-avatar-group>
+    <app-users-group-tooltip></app-users-group-tooltip>
     <div class="flex gap-2">
       <div class="flex align-items-center">
         <i class="pi pi-comment"></i>
@@ -40,4 +26,5 @@
       </div>
     </div>
   </div>
+  <p class="mb-0 mt-2 text-500 text-xs">Создан: 20 май, 2025</p>
 </p-card>

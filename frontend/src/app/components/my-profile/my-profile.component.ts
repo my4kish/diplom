@@ -14,7 +14,7 @@ import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-my-profile',
   imports: [
     CommonModule,
     AvatarModule,
@@ -25,11 +25,11 @@ import { CommonModule } from '@angular/common';
     InputMaskModule,
     SelectModule,
   ],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
+  templateUrl: './my-profile.component.html',
+  styleUrl: './my-profile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileComponent {
+export class MyProfileComponent {
   public cities!: string[];
   public gender!: string[];
   public isEditing:boolean = false;

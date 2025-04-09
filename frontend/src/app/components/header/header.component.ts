@@ -69,4 +69,11 @@ export class HeaderComponent implements OnInit {
   navigateProjects(): void {
     this.router.navigate(['/projects']);
   }
+
+  public toggleDarkMode(): void {
+    const element = document.querySelector('html');
+    const isDark = element!.classList.toggle('my-app-dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }
+  
 }
