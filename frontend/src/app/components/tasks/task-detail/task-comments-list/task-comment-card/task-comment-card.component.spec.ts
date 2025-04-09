@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfileGeneralComponent } from './profile-general.component';
+import { TaskCommentCardComponent } from './task-comment-card.component';
 
-describe('ProfileGeneralComponent', () => {
-  let component: ProfileGeneralComponent;
-  let fixture: ComponentFixture<ProfileGeneralComponent>;
+describe('TaskCommentCardComponent', () => {
+  let component: TaskCommentCardComponent;
+  let fixture: ComponentFixture<TaskCommentCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfileGeneralComponent]
+      imports: [TaskCommentCardComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProfileGeneralComponent);
+    fixture = TestBed.createComponent(TaskCommentCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

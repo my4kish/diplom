@@ -1,24 +1,87 @@
-<div class="flex flex-column justify-content-center mt-1">
-  <div class="card">
-    <p-tabs value="0" scrollable>
-      <p-tablist>
-        <p-tab value="0">
-          <i class="pi pi-user text-xl"></i>
-          <span class="font-bold whitespace-nowrap">Основная информация</span>
-        </p-tab>
-        <p-tab value="1">
-          <i class="pi pi-cog text-xl"></i>
-          <span class="font-bold whitespace-nowrap">Настройки</span>
-        </p-tab>
-      </p-tablist>
-      <p-tabpanels>
-        <p-tabpanel value="0"> 
-          <app-profile-general></app-profile-general>
-        </p-tabpanel>
-        <p-tabpanel value="1">
-          <app-profile-settings></app-profile-settings>
-        </p-tabpanel>
-      </p-tabpanels>
-    </p-tabs>
-  </div>
+<div class="m-3">
+  <p-panel>
+    <form [formGroup]="userForm" (ngSubmit)="onSumbit()">
+      <div class="flex flex-wrap gap-3 align-items-center justify-content-between">
+        <div class="flex flex-wrap gap-8 align-items-center">
+          <p-avatar
+            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+            class="mr-2 max-w-10rem max-h-10rem min-w-min w-full h-full"
+            size="xlarge"
+            shape="circle"
+          />
+          <div class="flex flex-column">
+            <p class="m-0 text-xl font-bold">Имя и фамилия</p>
+            <p class="m-0 text-500">Роль: Admin</p>
+            <p class="m-0 text-500">Должность: Менеджер</p>
+          </div>
+        </div>
+
+        <div class="width-45 flex justify-content-center flex-wrap my-5 gap-3">
+          <div class="flex flex-column">
+            <label for="name">Полное имя</label>
+            <input formControlName="name" pInputText id="name" class="w-20rem"/>
+          </div>
+          <div class="flex flex-column">
+            <label for="email">Email</label>
+            <input
+              formControlName="email"
+              pInputText
+              id="email"
+              placeholder="myEmail@mail.ru"
+              class="w-20rem"
+            />
+          </div>
+          <div class="flex flex-column">
+            <label for="gender">Пол</label>
+            <p-select
+              formControlName="gender"
+              [options]="gender"
+              placeholder="Выберите пол"
+              class="w-13rem"
+            />
+          </div>
+          <div class="flex flex-column">
+            <label for="city">Город</label>
+            <p-select
+              formControlName="city"
+              [options]="cities"
+              placeholder="Выберите город"
+              class="w-13rem"
+            />
+          </div>
+          <div class="flex flex-column">
+            <label for="birthday">Номер телефона</label>
+            <p-inputmask
+              formControlName="phone"
+              mask="+7(999) 999-9999"
+              placeholder="+7(707) 000-0000"
+            />
+          </div>
+        </div>
+
+        <div class="flex">
+          <p-button
+            *ngIf="!isEditing"
+            label="Редактировать"
+            (onClick)="enableEditing()"
+          ></p-button>
+
+          <ng-container *ngIf="isEditing">
+            <div class="flex gap-3">
+              <p-button
+                label="Отменить"
+                severity="info"
+                (onClick)="cancelEditing()"
+              ></p-button>
+              <p-button
+                label="Сохранить"
+                severity="success"
+                type="submit"
+              ></p-button>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </form>
+  </p-panel>
 </div>

@@ -6,6 +6,7 @@ import { ProjectListComponent } from './components/projects/project-list/project
 import { TaskListComponent } from './components/tasks/task-list/task-list.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { TaskDetailComponent } from './components/tasks/task-detail/task-detail.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,4 +17,5 @@ export const routes: Routes = [
   { path: 'projects/:id/tasks', component: TaskListComponent },
   { path: 'notifications', component: NotificationsComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'task/:id', component: TaskDetailComponent },
 ];

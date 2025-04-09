@@ -1,6 +1,6 @@
 <div class="kanban">
   <div class="kanban-container">
-    <p-panel header="New" [toggleable]="true">
+    <p-panel header="Новые" [toggleable]="true" class="">
       <div
         class="kanban-column"
         id="new"
@@ -12,38 +12,12 @@
       >
         @for (item of new; track item) {
         <div class="task-box" *ngIf="item.status === 'new'" cdkDrag>
-          <p-card header="{{ item.title }}">
-            <p class="m-0">{{ item.description }}</p>
-            <p class="m-0">Status: {{ item.status }}</p>
-            <p-avatar-group>
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/asiyajavayant.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png"
-                shape="circle"
-              />
-              <p-avatar label="+2" shape="circle" />
-            </p-avatar-group>
-          </p-card>
+          <app-task-card [item]="item"></app-task-card>
         </div>
         }
       </div>
     </p-panel>
-    <p-panel header="In progress" [toggleable]="true">
+    <p-panel header="В процессе" [toggleable]="true">
       <div
         class="kanban-column"
         id="in_progress"
@@ -55,38 +29,12 @@
       >
         @for (item of inProgress; track item) {
         <div class="task-box" *ngIf="item.status === 'in_progress'" cdkDrag>
-          <p-card header="{{ item.title }}">
-            <p class="m-0">{{ item.description }}</p>
-            <p class="m-0">Status: {{ item.status }}</p>
-            <p-avatar-group>
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/asiyajavayant.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png"
-                shape="circle"
-              />
-              <p-avatar label="+2" shape="circle" />
-            </p-avatar-group>
-          </p-card>
+          <app-task-card [item]="item"></app-task-card>
         </div>
         }
       </div>
     </p-panel>
-    <p-panel header="Completed" [toggleable]="true">
+    <p-panel header="Выполнены" [toggleable]="true">
       <div
         class="kanban-column"
         id="completed"
@@ -98,38 +46,12 @@
       >
         @for (item of completed; track item) {
         <div class="task-box" *ngIf="item.status === 'completed'" cdkDrag>
-          <p-card header="{{ item.title }}">
-            <p class="m-0">{{ item.description }}</p>
-            <p class="m-0">Status: {{ item.status }}</p>
-            <p-avatar-group>
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/asiyajavayant.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png"
-                shape="circle"
-              />
-              <p-avatar label="+2" shape="circle" />
-            </p-avatar-group>
-          </p-card>
+          <app-task-card [item]="item"></app-task-card>
         </div>
         }
       </div>
     </p-panel>
-    <p-panel header="Overdue" [toggleable]="true">
+    <p-panel header="Просрочены" [toggleable]="true">
       <div
         class="kanban-column"
         id="overdue"
@@ -141,33 +63,7 @@
       >
         @for (item of overdue; track item) {
         <div class="task-box" *ngIf="item.status === 'overdue'" cdkDrag>
-          <p-card header="{{ item.title }}">
-            <p class="m-0">{{ item.description }}</p>
-            <p class="m-0">Status: {{ item.status }}</p>
-            <p-avatar-group>
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/asiyajavayant.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
-                shape="circle"
-              />
-              <p-avatar
-                image="https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png"
-                shape="circle"
-              />
-              <p-avatar label="+2" shape="circle" />
-            </p-avatar-group>
-          </p-card>
+          <app-task-card [item]="item"></app-task-card>
         </div>
         }
       </div>

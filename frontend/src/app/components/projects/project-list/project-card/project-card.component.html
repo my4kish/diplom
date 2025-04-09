@@ -1,15 +1,27 @@
 <p-card>
-  <ng-template #title> {{ project.name }} </ng-template>
-  <ng-template #subtitle> {{ project.status }} </ng-template>
+  <p class="text-2xl font-bold">{{ project.name }}</p>
+  <p>
+    Status:
+    <p-tag
+      [value]="switchStatus(project.status)"
+      [severity]="getSeverity(project.status)"
+    />
+  </p>
   <p>
     {{ project.description }}
   </p>
   <ng-template #footer>
-      <div class="flex gap-2 mt-1">
-          <a [routerLink]="projectLink" class="p-button font-bold w-full ">
-            Просмотреть задачи
-          </a>
-          <button pButton type="button" label="Удалить" icon="pi pi-trash" class="p-button-danger font-bold w-5"></button>
-      </div>
+    <div class="flex gap-2 mt-1">
+      <a [routerLink]="projectLink" class="p-button font-bold w-full">
+        Просмотреть задачи
+      </a>
+      <button
+        pButton
+        type="button"
+        label="Удалить"
+        icon="pi pi-trash"
+        class="p-button-danger font-bold w-5"
+      ></button>
+    </div>
   </ng-template>
 </p-card>

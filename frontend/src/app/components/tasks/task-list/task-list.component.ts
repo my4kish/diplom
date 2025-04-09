@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
-import { BadgeModule } from 'primeng/badge';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -10,20 +8,16 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { AvatarGroupModule } from 'primeng/avatargroup';
-import { AvatarModule } from 'primeng/avatar';
+import { TaskCardComponent } from './task-card/task-card.component';
 
 @Component({
   selector: 'app-task-list',
   imports: [
-    CardModule,
     CdkDropList,
     CdkDrag,
     PanelModule,
     CommonModule,
-    BadgeModule,
-    AvatarGroupModule,
-    AvatarModule,
+    TaskCardComponent,
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
@@ -119,13 +113,10 @@ export class TaskListComponent {
     } else {
       const task = event.previousContainer.data[event.previousIndex];
 
-      // Определяем новый статус на основе контейнера
       const newStatus = event.container.id;
 
-      // Обновляем статус задачи
       task.status = newStatus;
 
-      // Перемещаем задачу
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
