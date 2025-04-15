@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ProjectCardComponent } from './project-card/project-card.component';
 import { CommonModule } from '@angular/common';
 import { SpeedDialModule } from 'primeng/speeddial';
+import { ProjectCreateCardComponent } from '../project-create-card/project-create-card.component';
 
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectCardComponent, CommonModule, SpeedDialModule],
+  imports: [ProjectCardComponent, CommonModule, SpeedDialModule, ProjectCreateCardComponent],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,7 +15,7 @@ export class ProjectListComponent {
   public readonly projects = [
     {
       _id: '60d21b4667d0d8992e610c50',
-      name: 'Project Alpha',
+      name: 'Project Alphaaaaaaaaaa',
       description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       startDate: '2025-01-10T00:00:00Z',

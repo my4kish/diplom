@@ -7,6 +7,7 @@ import { TaskListComponent } from './components/tasks/task-list/task-list.compon
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { MyProfileComponent } from './components/my-profile/my-profile.component';
 import { TaskDetailComponent } from './components/tasks/task-detail/task-detail.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -17,5 +18,6 @@ export const routes: Routes = [
   { path: 'projects/:id/tasks', component: TaskListComponent },
   { path: 'notifications', component: NotificationsComponent },
   { path: 'profile', component: MyProfileComponent },
+  { path: 'profile/:id', component: UserProfileComponent },
   { path: 'task/:id', component: TaskDetailComponent },
 ];

@@ -33,7 +33,7 @@
 ```json
 {
   "_id": ObjectId,
-  "name": "Название проекта",
+  "name": "Название проекта"  22 символов максимум,
   "description": "Описание проекта",
   "startDate": ISODate,
   "endDate": ISODate,

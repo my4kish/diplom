@@ -1,10 +1,8 @@
 <div class="flex flex-column align-items-center">
-  <div class="flex flex-row gap-3 mt-3">
+  <div class="projects-list flex flex-row flex-wrap gap-3 mt-5">
+    <app-project-create-card></app-project-create-card>
     <div *ngFor="let item of projects">
       <app-project-card [project] = "item" ></app-project-card>
     </div>
   </div>
-</div>
-<div style="position: relative; height: 500px">
-  
 </div>

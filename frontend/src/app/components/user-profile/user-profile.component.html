@@ -1,0 +1,66 @@
+<div class="m-3 flex justify-content-center gap-4">
+  <div class="flex flex-column gap-4">
+    <p-panel [showHeader]="false">
+      <div class="flex flex-wrap gap-3 align-items-center mt-4">
+        <p-avatar
+          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+          class="mr-2 max-w-10rem max-h-10rem min-w-min w-full h-full"
+          size="xlarge"
+          shape="circle"
+        />
+        <div class="flex flex-column">
+          <p class="mx-0 my-1 text-xl font-bold">Имя и фамилия</p>
+          <p class="mx-0 my-1 text-500">Роль: Admin</p>
+          <p class="mx-0 my-1 text-500">Должность: Менеджер</p>
+        </div>
+      </div>
+    </p-panel>
+    <p-panel [showHeader]="false">
+      <div class="mt-4">
+        <p class="mx-4 my-0 text-2xl font-bold">Общая информация</p>
+        <p class="mx-4 my-1 text-justify">Возраст: 25</p>
+        <p class="mx-4 my-1 text-justify">Город: Караганда</p>
+        <p class="mx-4 my-1 text-justify">Пол: Женский</p>
+      </div>
+    </p-panel>
+    <p-panel [showHeader]="false">
+      <div class="mt-4">
+        <p class="mx-4 my-0 text-2xl font-bold">Контакты</p>
+        <p class="mx-4 my-1 text-justify">Номер телефона: +7 (708) 000 00 00</p>
+        <p class="mx-4 my-1 text-justify">Email: example&#64;mail.ru</p>
+      </div>
+    </p-panel>
+  </div>
+  <p-panel>
+    <div class="max-w-30rem">
+      <p class="mx-4 my-0 text-2xl font-bold">Про меня</p>
+      <p class="description m-4 text-justify">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget
+        nulla commodo, euismod lectus ac, imperdiet libero. Praesent a felis
+        magna. Ut semper ultricies nisl, vitae mollis sem feugiat ut. Vivamus
+        lacinia sed tellus euismod accumsan. Fusce at lectus eros. Pellentesque
+        aliquet est non posuere hendrerit. Sed justo ante, tempus mollis orci
+        nec, auctor consequat leo. Vestibulum placerat nec elit ut ornare. Nunc
+        eleifend accumsan pellentesque. Morbi semper vestibulum risus. Quisque a
+        quam placerat, auctor risus sit amet, pellentesque nunc. Nam eleifend
+        aliquet rhoncus. Sed eu iaculis odio. Suspendisse euismod nunc a arcu
+        rhoncus, ac bibendum lorem luctus. Etiam ligula ipsum, commodo eu
+        tincidunt ac, convallis mattis eros. Aliquam euismod nunc id purus
+        pulvinar ullamcorper. Sed fringilla erat lorem. Donec sodales augue ut
+        purus consequat, ut interdum dui maximus. Praesent non dui quis tellus
+        convallis efficitur. Nunc suscipit, ipsum ut suscipit fermentum, velit
+        leo varius ipsum, et mollis arcu felis eu mi. Curabitur aliquet et
+        turpis eu suscipit. Ut vel convallis massa. In nec tellus vitae magna
+        vestibulum cursus. Nulla tempor egestas sem, sit amet ultrices dui
+        imperdiet sed. Phasellus tristique volutpat tellus, eu ullamcorper urna.
+        Fusce vitae justo volutpat, rhoncus velit eu, vestibulum quam.
+      </p>
+    </div>
+  </p-panel>
+  <p-panel [showHeader]="false"> 
+    <div class="mt-4">
+      <p class="mx-4 mt-0 text-2xl font-bold">Задачи</p>
+      <p-chart [options]="options" [data]="data" type="doughnut" class="w-full md:w-[30rem]"/>
+    </div>
+  </p-panel>
+</div>
