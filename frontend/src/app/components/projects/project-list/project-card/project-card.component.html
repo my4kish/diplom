@@ -6,6 +6,7 @@
         variant="text"
         [raised]="true"
         [rounded]="true"
+        (onClick)="openDialog()"
       ></p-button>
     </div>
     <p class="mb-0 mt-2 text-500">
@@ -15,9 +16,12 @@
         [severity]="getSeverity(project.status)"
       />
     </p>
-    <p class="description mt-3 mb-1 max-w-18rem h-4rem text-justify">
+    <p class="description mt-3 mb-1 max-w-18rem h-4rem text-justify" (click)="showFullDesc()">
       {{ project.description }}
     </p>
+    <p-dialog header="Описание проекта" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+      {{ project.description }}
+    </p-dialog>
     <ng-template #footer>
       <div class="flex gap-2 mt-1">
         <a

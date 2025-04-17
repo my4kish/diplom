@@ -5,6 +5,7 @@ import { ChipModule } from 'primeng/chip';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UsersGroupTooltipComponent } from '../../../shared/users-group-tooltip/users-group-tooltip.component';
+import { Severity } from '../../../../interfaces/severity';
 
 @Component({
   selector: 'app-task-card',
@@ -23,7 +24,7 @@ export class TaskCardComponent {
   @Input()
   item: any;
 
-  getSeverity(status: string) {
+  public getSeverity(status: string): Severity {
     switch (status) {
       case 'new':
         return 'secondary';
@@ -38,7 +39,7 @@ export class TaskCardComponent {
     }
   }
 
-  getPriorityColor(priority: string): string {
+  public getPriorityColor(priority: string): string {
     switch (priority) {
       case 'high':
         return 'rgba(255, 0, 0, 0.5)';
@@ -51,7 +52,7 @@ export class TaskCardComponent {
     }
   }
 
-  switchStatus(status: string) {
+  public switchStatus(status: string) {
     switch (status) {
       case 'new':
         return 'Новая';

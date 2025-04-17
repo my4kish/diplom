@@ -7,6 +7,7 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { UsersGroupTooltipComponent } from '../shared/users-group-tooltip/users-group-tooltip.component';
+import { Severity } from '../../interfaces/severity';
 
 @Component({
   selector: 'app-main',
@@ -69,7 +70,7 @@ export class MainComponent {
     return this.tasks.slice(0, 5)
   }
 
-  getSeverity(status: string) {
+  public getSeverity(status: string): Severity {
     switch (status) {
       case 'new':
         return 'secondary';
@@ -84,7 +85,7 @@ export class MainComponent {
     }
   }
 
-  switchStatus(status: string) {
+  public switchStatus(status: string) {
     switch (status) {
       case 'new':
         return 'Новая';
