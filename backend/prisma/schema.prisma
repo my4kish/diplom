@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String         @unique
+  password      String
+  role          RoleType
+  position      String
+  avatarUrl     String?
+  projects      Project[]      @relation("ProjectMembers")
+  tasks         Task[]         @relation("TaskAssignee")
+  notifications Notification[]
+  comments      Comment[]      @relation("CommentAuthor")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  Project       Project[]
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  name        String        @db.VarChar(22)
+  description String
+  startDate   DateTime?
+  endDate     DateTime?
+  status      ProjectStatus
+  tasks       Task[]
+  members     User[]        @relation("ProjectMembers")
+  createdBy   User          @relation(fields: [createdById], references: [id])
+  createdById String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Task {
+  id           String     @id @default(uuid())
+  title        String
+  description  String
+  status       TaskStatus
+  priority     Priority
+  dueDate      DateTime?
+  imgUrls      String[]   @default([])
+  assignedTo   User       @relation("TaskAssignee", fields: [assignedToId], references: [id])
+  assignedToId String
+  project      Project    @relation(fields: [projectId], references: [id])
+  projectId    String
+  comments     Comment[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    String
+  author    User     @relation("CommentAuthor", fields: [authorId], references: [id])
+  authorId  String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  contentType String
+  message     String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  permissions String[] // массив разрешений, например: ["create_task", "delete_project"]
+}
+
+enum RoleType {
+  admin
+  manager
+  employee
+}
+
+enum ProjectStatus {
+  active
+  completed
+  archived
+}
+
+enum TaskStatus {
+  new
+  in_progress
+  completed
+  overdue
+}
+
+enum Priority {
+  low
+  medium
+  high
+}

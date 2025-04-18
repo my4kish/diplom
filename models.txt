@@ -16,7 +16,8 @@
 ```json
 {
   "_id": ObjectId,
-  "name": "Имя пользователя",
+  "firstName": "Имя пользователя",
+  "lastName": "Фамилия пользователя",
   "email": "email@example.com",
   "password": "хэшированный_пароль",
   "role": "manager | employee | admin",
@@ -39,7 +40,7 @@
   "endDate": ISODate,
   "status": "active | completed | archived",
   "tasks": [ObjectId], // связанные задачи
-  "team": [ObjectId],  // пользователи, работающие над проектом
+  "members": [ObjectId],  // пользователи, работающие над проектом
   "createdBy": ObjectId, // ссылка на пользователя (создатель)
   "createdAt": ISODate,
   "updatedAt": ISODate
@@ -56,7 +57,7 @@
   "priority": "low | medium | high",
   "dueDate": ISODate,
   "imgUrls": ["url1", "url2", ]
-  "assignedTo": [ObjectId],  // ссылка на пользователя
+  "assignedTo": ObjectId,  // ссылка на пользователя
   "projectId": ObjectId,   // ссылка на проект
   "comments": [ObjectId],   // комментарии к задаче
   "createdAt": ISODate,
