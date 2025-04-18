@@ -14,44 +14,49 @@
           "git status"
         ]
       },
+      {
+        "name": "prisma",
+        "icon": "database",
+        "color": "terminal.ansiGreen",
+        "cwd": "backend",
+        "commands": [
+          "npx prisma studio"
+        ]
+      },
       [
         {
           "name": "client",
-          "autoExecuteCommands": true,
           "icon": "person",
           "color": "terminal.ansiGreen",
+          "cwd": "frontend",
           "commands": [
-            "cd frontend"
+            "ng serve"
           ]
         },
         {
           "name": "client change",
-          "autoExecuteCommands": true,
           "icon": "person",
           "color": "terminal.ansiWhite",
-          "commands": [
-            "cd frontend"
-          ]
+          "cwd": "frontend",
+          "commands": []
         }
       ],
       [
         {
           "name": "server",
-          "autoExecuteCommands": true,
           "icon": "server",
           "color": "terminal.ansiGreen",
+          "cwd": "backend",
           "commands": [
-            "cd backend"
+            "npm run start:dev"
           ]
         },
         {
           "name": "server change",
-          "autoExecuteCommands": true,
           "icon": "server",
           "color": "terminal.ansiWhite",
-          "commands": [
-            "cd backend"
-          ]
+          "cwd": "backend",
+          "commands": []
         }
       ]
     ],

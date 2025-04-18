@@ -9,12 +9,12 @@ datasource db {
 
 model User {
   id            String         @id @default(uuid())
-  firstName     String
-  lastName      String
+  firstName     String?        @db.VarChar(50)
+  lastName      String?        @db.VarChar(50)
   email         String         @unique
   password      String
-  role          RoleType
-  position      String
+  role          RoleType?      @default(employee)
+  position      String?
   avatarUrl     String?
   projects      Project[]      @relation("ProjectMembers")
   tasks         Task[]         @relation("TaskAssignee")
@@ -28,10 +28,8 @@ model User {
 model Project {
   id          String        @id @default(uuid())
   name        String        @db.VarChar(22)
-  description String
-  startDate   DateTime?
-  endDate     DateTime?
-  status      ProjectStatus
+  description String?       @db.VarChar(300)
+  status      ProjectStatus @default(active)
   tasks       Task[]
   members     User[]        @relation("ProjectMembers")
   createdBy   User          @relation(fields: [createdById], references: [id])
@@ -41,20 +39,20 @@ model Project {
 }
 
 model Task {
-  id           String     @id @default(uuid())
-  title        String
-  description  String
-  status       TaskStatus
+  id           String      @id @default(uuid())
+  title        String      @db.VarChar(22)
+  description  String?     @db.VarChar(300)
+  status       TaskStatus? @default(new)
   priority     Priority
   dueDate      DateTime?
-  imgUrls      String[]   @default([])
-  assignedTo   User       @relation("TaskAssignee", fields: [assignedToId], references: [id])
+  imgUrls      String[]    @default([])
+  assignedTo   User        @relation("TaskAssignee", fields: [assignedToId], references: [id])
   assignedToId String
-  project      Project    @relation(fields: [projectId], references: [id])
+  project      Project     @relation(fields: [projectId], references: [id])
   projectId    String
   comments     Comment[]
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 }
 
 model Comment {
