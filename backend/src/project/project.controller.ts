@@ -28,7 +28,6 @@ export class ProjectController {
 
   // Получение проекта по ID
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   async getProjectById(@Param('id', ParseUUIDPipe) projectId: string) {
     return this.projectService.getProjectById(projectId);
   }
