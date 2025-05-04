@@ -1,7 +1,6 @@
 import { IsEmail, IsOptional, IsString, MinLength, MaxLength } from 'class-validator';
-import { RoleType } from '@prisma/client';
 
-export class CreateUserDto {
+export class RegisterDto {
   @IsOptional()
   @IsString()
   @MaxLength(50)
@@ -15,17 +14,7 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
+  @IsString()
   @MinLength(6)
   password: string;
-
-  @IsOptional()
-  role?: RoleType;
-
-  @IsOptional()
-  @IsString()
-  position?: string;
-
-  @IsOptional()
-  @IsString()
-  avatarUrl?: string;
 }

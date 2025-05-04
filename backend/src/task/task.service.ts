@@ -1,13 +1,17 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma.service";
-import { CreateTaskDto } from "./dto/create-task.dto";
-import { UpdateTaskDto } from "./dto/update-task.dto";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma.service';
+import { NotificationService } from 'src/notification/notification.service';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TaskService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationService: NotificationService,
+  ) {}
 
-  create(createTaskDto: CreateTaskDto) {
+  async create(createTaskDto: CreateTaskDto) {
     const {
       title,
       description,
@@ -18,8 +22,8 @@ export class TaskService {
       assignedToId,
       projectId,
     } = createTaskDto;
-  
-    return this.prisma.task.create({
+
+    const task = await this.prisma.task.create({
       data: {
         title,
         description,
@@ -35,8 +39,15 @@ export class TaskService {
         },
       },
     });
+
+    await this.notificationService.notifyUser(
+      assignedToId,
+      'task',
+      `Вам назначена новая задача: ${title}`
+    );
+
+    return task;
   }
-  
 
   findAll() {
     return this.prisma.task.findMany({
@@ -92,9 +103,15 @@ export class TaskService {
       },
     });
   }
-  
 
-  update(id: string, updateTaskDto: UpdateTaskDto) {
+  async update(id: string, updateTaskDto: UpdateTaskDto) {
+    const existingTask = await this.prisma.task.findUnique({
+      where: { id },
+      select: { title: true, assignedToId: true },
+    });
+
+    if (!existingTask) throw new NotFoundException('Task not found');
+
     const {
       title,
       description,
@@ -105,8 +122,8 @@ export class TaskService {
       assignedToId,
       projectId,
     } = updateTaskDto;
-  
-    return this.prisma.task.update({
+
+    const task = await this.prisma.task.update({
       where: { id },
       data: {
         ...(title && { title }),
@@ -115,13 +132,11 @@ export class TaskService {
         ...(priority && { priority }),
         ...(dueDate && { dueDate }),
         ...(imgUrls && { imgUrls }),
-  
         ...(assignedToId && {
           assignedTo: {
             connect: { id: assignedToId },
           },
         }),
-  
         ...(projectId && {
           project: {
             connect: { id: projectId },
@@ -129,10 +144,36 @@ export class TaskService {
         }),
       },
     });
-  }
-  
 
-  remove(id: string) {
+    // Уведомление, если исполнитель был изменён
+    if (assignedToId && assignedToId !== existingTask.assignedToId) {
+      await this.notificationService.notifyUser(
+        assignedToId,
+        'task',
+        `Вам была переназначена задача: ${existingTask.title}`
+      );
+    }
+
+    return task;
+  }
+
+  async remove(id: string) {
+    const task = await this.prisma.task.findUnique({
+      where: { id },
+      select: {
+        assignedToId: true,
+        title: true,
+      },
+    });
+
+    if (!task) throw new NotFoundException('Task not found');
+
+    await this.notificationService.notifyUser(
+      task.assignedToId,
+      'task',
+      `Задача "${task.title}" была удалена`
+    );
+
     return this.prisma.task.delete({ where: { id } });
   }
 }

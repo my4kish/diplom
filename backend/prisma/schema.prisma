@@ -13,7 +13,7 @@ model User {
   lastName      String?        @db.VarChar(50)
   email         String         @unique
   password      String
-  role          RoleType?      @default(employee)
+  role          RoleType?      @default(user)
   position      String?
   avatarUrl     String?
   projects      Project[]      @relation("ProjectMembers")
@@ -82,9 +82,11 @@ model Role {
 }
 
 enum RoleType {
-  admin
-  manager
-  employee
+  superadmin
+  orgadmin
+  projectadmin
+  poweruser
+  user
 }
 
 enum ProjectStatus {

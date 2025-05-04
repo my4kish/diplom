@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -10,19 +15,22 @@ export class ProjectService {
 
   // Создание нового проекта
   async createProject(createProjectDto: CreateProjectDto, userId: string) {
-    const { name, description } = createProjectDto;
+    const { name, description, memberIds } = createProjectDto;
 
-    // Создание проекта
-    const project = await this.prisma.project.create({
-      data: {
-        name,
-        description,
-        status: ProjectStatus.active,  // по умолчанию активный
-        createdById: userId,
-      },
-    });
+    const data: any = {
+      name,
+      description,
+      status: ProjectStatus.active,
+      createdById: userId,
+    };
 
-    return project;
+    if (memberIds?.length) {
+      data.members = {
+        connect: memberIds.map((id) => ({ id })),
+      };
+    }
+
+    return this.prisma.project.create({ data });
   }
 
   // Получение проекта по ID
@@ -70,7 +78,9 @@ export class ProjectService {
 
     // Проверяем, является ли пользователь создателем проекта
     if (existingProject.createdById !== userId) {
-      throw new ForbiddenException('You are not allowed to update this project');
+      throw new ForbiddenException(
+        'You are not allowed to update this project',
+      );
     }
 
     // Данные для обновления
@@ -106,7 +116,9 @@ export class ProjectService {
 
     // Проверяем, является ли пользователь создателем проекта
     if (project.createdById !== userId) {
-      throw new ForbiddenException('You are not allowed to delete this project');
+      throw new ForbiddenException(
+        'You are not allowed to delete this project',
+      );
     }
 
     // Удаляем проект
@@ -121,23 +133,48 @@ export class ProjectService {
   async addMembersToProject(projectId: string, membersIds: string[]) {
     const project = await this.prisma.project.findUnique({
       where: { id: projectId },
+      include: { members: true },
     });
 
     if (!project) {
       throw new NotFoundException('Project not found');
     }
 
-    // Подключаем участников
-    const updatedProject = await this.prisma.project.update({
+    // ID уже добавленных участников
+    const existingMemberIds = project.members.map((m) => m.id);
+
+    // Фильтрация: только те ID, которых ещё нет
+    const newMemberIds = membersIds.filter(
+      (id) => !existingMemberIds.includes(id),
+    );
+
+    if (newMemberIds.length === 0) {
+      throw new BadRequestException(
+        'All users are already members of this project',
+      );
+    }
+
+    // Проверка, существуют ли эти пользователи
+    const validUsers = await this.prisma.user.findMany({
+      where: { id: { in: newMemberIds } },
+    });
+
+    if (validUsers.length !== newMemberIds.length) {
+      throw new BadRequestException('One or more users not found');
+    }
+
+    // Добавление новых участников
+    return this.prisma.project.update({
       where: { id: projectId },
       data: {
         members: {
-          connect: membersIds.map((id) => ({ id })),
+          connect: newMemberIds.map((id) => ({ id })),
         },
       },
+      include: {
+        members: true,
+      },
     });
-
-    return updatedProject;
   }
 
   // Удаление участников из проекта

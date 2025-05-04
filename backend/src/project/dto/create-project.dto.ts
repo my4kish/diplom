@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsArray, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -10,4 +10,8 @@ export class CreateProjectDto {
   @MaxLength(300)
   description?: string;
 
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  memberIds?: string[];
 }
