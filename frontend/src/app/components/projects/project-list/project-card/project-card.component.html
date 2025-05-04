@@ -10,7 +10,7 @@
       ></p-button>
     </div>
     <p class="mb-0 mt-2 text-500">
-      Статус:
+      Мәртебесі:
       <p-tag
         [value]="switchStatus(project.status)"
         [severity]="getSeverity(project.status)"
@@ -19,7 +19,7 @@
     <p class="description mt-3 mb-1 max-w-18rem h-4rem text-justify" (click)="showFullDesc()">
       {{ project.description }}
     </p>
-    <p-dialog header="Описание проекта" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <p-dialog header="Жоба сипаттамасы" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
       {{ project.description }}
     </p-dialog>
     <ng-template #footer>
@@ -30,17 +30,17 @@
           pButton
           [raised]="true"
           severity="warn"
-          >Посмотреть задачи</a
+          >Тапсырмаларды қарау</a
         >
         <p-button
           [style]="{ padding: '0.25rem 1rem' }"
           icon="pi pi-trash"
-          label="Удалить"
+          label="Өшіру"
           severity="danger"
           variant="outlined"
           [raised]="true"
         ></p-button>
       </div>
     </ng-template>
-    <p class="mb-0 mt-2 text-500 text-xs">Создан: 20 май, 2025</p>
+    <p class="mb-0 mt-2 text-500 text-xs">Құрылды: 20 май, 2025</p>
   </p-card>

@@ -7,17 +7,36 @@ import { TaskListComponent } from './components/tasks/task-list/task-list.compon
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { MyProfileComponent } from './components/my-profile/my-profile.component';
 import { TaskDetailComponent } from './components/tasks/task-detail/task-detail.component';
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'main', component: MainComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: 'main', pathMatch: 'full' },
+  { path: 'main', component: MainComponent },
   { path: 'projects', component: ProjectListComponent },
-  { path: 'projects/:id/tasks', component: TaskListComponent },
+  { path: 'projects/:projectId/tasks', component: TaskListComponent },
+  { path: 'task/:taskId', component: TaskDetailComponent },
   { path: 'notifications', component: NotificationsComponent },
   { path: 'profile', component: MyProfileComponent },
-  { path: 'profile/:id', component: UserProfileComponent },
-  { path: 'task/:id', component: TaskDetailComponent },
+  {
+    path: 'all-tasks',
+    loadComponent: () =>
+      import('./components/all-tasks/all-tasks.component').then(
+        (m) => m.AllTasksComponent
+      ),
+  },
+  {
+    path: 'profiles/:userId',
+    loadComponent: () =>
+      import('./components/user-profile/user-profile.component').then(
+        (m) => m.UserProfileComponent
+      ),
+  },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./components/admin-panel/admin-panel.component').then(
+        (m) => m.AdminPanelComponent
+      ),
+  },
 ];

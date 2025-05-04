@@ -1,16 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TableModule } from 'primeng/table';
+import { Severity } from '../../interfaces/severity';
 import { RouterLink } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
-import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { Severity } from '../../interfaces/severity';
+import { TooltipModule } from 'primeng/tooltip';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-main',
+  selector: 'app-all-tasks',
   imports: [
+    CommonModule,
     CardModule,
     ButtonModule,
     AvatarModule,
@@ -18,13 +21,14 @@ import { Severity } from '../../interfaces/severity';
     TagModule,
     RouterLink,
     PanelModule,
+    AvatarModule,
+    TooltipModule,
   ],
-  templateUrl: './main.component.html',
-  styleUrl: './main.component.scss',
+  templateUrl: './all-tasks.component.html',
+  styleUrl: './all-tasks.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainComponent {
-
+export class AllTasksComponent {
   tasks = [
     {
       name: 'Сделать отчёт',
@@ -64,10 +68,6 @@ export class MainComponent {
     },
   ];
 
-  get displayedTasks() {
-    return this.tasks.slice(0, 5)
-  }
-
   public getSeverity(status: string): Severity {
     switch (status) {
       case 'new':
@@ -95,6 +95,25 @@ export class MainComponent {
         return 'Мерзімі өтті';
       default:
         return undefined;
+    }
+  }
+
+  public cycleStatus(task: any): void {
+    if (task.status === 'overdue') return;
+
+    switch (task.status) {
+      case 'new':
+        task.status = 'in_progress';
+        break;
+      case 'in_progress':
+        task.status = 'completed';
+        break;
+      case 'completed':
+        task.status = 'in_progress';
+        break;
+      default:
+        task.status = 'new';
+        break;
     }
   }
 }

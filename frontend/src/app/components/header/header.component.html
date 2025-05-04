@@ -24,12 +24,12 @@
         <circle cx="70" cy="20" r="4" class="dot" />
       </svg>
     </div>
-    <a href="/main" class="text-xl text-900">Главная</a>
-    <a href="/projects" class="text-xl text-900">Проекты</a>
-    <a href="/projects/:id/tasks" class="text-xl text-900">Мои задачи</a>
+    <a href="/main" class="text-xl text-900">Басты бет</a>
+    <a href="/projects" class="text-xl text-900">Жобалар</a>
+    <a href="/all-tasks" class="text-xl text-900">Тапсырмалар</a>
   </div>
   <div class="flex align-items-center gap-3 py-1">
-    <input type="text" pSize="small" pInputText placeholder="Поиск" />
+    <!-- <input type="text" pSize="small" pInputText placeholder="Поиск" /> -->
     <p-overlaybadge value="2" severity="contrast">
       <p-button
         icon="pi pi-bell"
@@ -48,8 +48,16 @@
       [raised]="true"
       (onClick)="toggleDarkMode()"
     />
-    <div class="card">
-      <p-menu #menu [model]="profileItems" [popup]="true"/>
+    <p-button
+      icon="pi pi-chart-bar"
+      [rounded]="true"
+      severity="info"
+      [outlined]="true"
+      [raised]="true"
+      (onClick)="router.navigate(['/admin'])"
+    />
+    <div class="card relative">
+      <p-menu #menu [model]="profileItems" [popup]="true" appendTo="target" [style]="{ right: '0px', top: '40px' }"/>
       <p-avatar
         icon="pi pi-user"
         size="large"

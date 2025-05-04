@@ -10,15 +10,15 @@
             shape="circle"
           />
           <div class="flex flex-column">
-            <p class="m-0 text-xl font-bold">Имя и фамилия</p>
-            <p class="m-0 text-500">Роль: Admin</p>
-            <p class="m-0 text-500">Должность: Менеджер</p>
+            <p class="m-0 text-xl font-bold">Аты жөні</p>
+            <p class="m-0 text-500">Рөлі: Admin</p>
+            <p class="m-0 text-500">Лауазымы: Менеджер</p>
           </div>
         </div>
 
         <div class="width-45 flex justify-content-center flex-wrap my-5 gap-3">
           <div class="flex flex-column">
-            <label for="name">Полное имя</label>
+            <label for="name">Толық аты</label>
             <input formControlName="name" pInputText id="name" class="w-20rem"/>
           </div>
           <div class="flex flex-column">
@@ -32,7 +32,7 @@
             />
           </div>
           <div class="flex flex-column">
-            <label for="gender">Пол</label>
+            <label for="gender">Жынысы</label>
             <p-select
               formControlName="gender"
               [options]="gender"
@@ -41,7 +41,7 @@
             />
           </div>
           <div class="flex flex-column">
-            <label for="city">Город</label>
+            <label for="city">Қала</label>
             <p-select
               formControlName="city"
               [options]="cities"
@@ -50,7 +50,7 @@
             />
           </div>
           <div class="flex flex-column">
-            <label for="birthday">Номер телефона</label>
+            <label for="birthday">Телефон нөмірі</label>
             <p-inputmask
               formControlName="phone"
               mask="+7(999) 999-9999"
@@ -62,19 +62,19 @@
         <div class="flex">
           <p-button
             *ngIf="!isEditing"
-            label="Редактировать"
+            label="Өңдеу"
             (onClick)="enableEditing()"
           ></p-button>
 
           <ng-container *ngIf="isEditing">
             <div class="flex gap-3">
               <p-button
-                label="Отменить"
+                label="Бас тарту"
                 severity="info"
                 (onClick)="cancelEditing()"
               ></p-button>
               <p-button
-                label="Сохранить"
+                label="Сақтау"
                 severity="success"
                 type="submit"
               ></p-button>

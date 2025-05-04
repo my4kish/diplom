@@ -7,7 +7,6 @@ import { TaskCommentsListComponent } from './task-comments-list/task-comments-li
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonModule } from '@angular/common';
 import { AvatarGroupModule } from 'primeng/avatargroup';
-import { UsersGroupTooltipComponent } from '../../shared/users-group-tooltip/users-group-tooltip.component';
 
 @Component({
   selector: 'app-task-detail',
@@ -20,7 +19,6 @@ import { UsersGroupTooltipComponent } from '../../shared/users-group-tooltip/use
     TaskCommentsListComponent,
     TooltipModule,
     CommonModule,
-    UsersGroupTooltipComponent,
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.scss',
