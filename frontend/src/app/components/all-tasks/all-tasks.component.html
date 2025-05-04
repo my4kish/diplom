@@ -1,0 +1,53 @@
+<div class="tasks-table flex justify-content-center mt-8">
+  <p-panel>
+    <ng-template #header>
+      <div class="flex align-items-center gap-2 ml-3">
+        <i class="pi pi-file-o text-xl font-bold"></i>
+        <p class="m-0 text-900 font-bold text-xl">Барлық тапсырмалар</p>
+      </div>
+    </ng-template>
+
+    <p-table
+      [value]="tasks"
+      [paginator]="true"
+      [rows]="5"
+      [rowHover]="true"
+      [tableStyle]="{ 'min-width': '100rem' , 'min-height': '30rem'}"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Тапсырма</th>
+          <th>Мәртебесі</th>
+          <th>Жоба</th>
+          <th>Құрылды</th>
+          <th>Басымдық</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-task>
+        <tr [routerLink]="['/task', task.id]" class="cursor-pointer" >
+          <td>{{ task.name }}</td>
+          <td>
+            <div class="flex align-items-center gap-2">
+              <p-tag
+                [value]="switchStatus(task.status)"
+                [severity]="getSeverity(task.status)"
+                class="w-5"
+              />
+              <button
+                *ngIf="task.status !== 'overdue'"
+                pButton
+                icon="pi pi-sync"
+                class="p-button-sm p-button-text"
+                (click)="cycleStatus(task); $event.stopPropagation()"
+                pTooltip="Сменить статус"
+                tooltipPosition="top"
+              ></button>
+            </div>
+          </td>
+          <td>{{ task.project }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-panel>
+</div>

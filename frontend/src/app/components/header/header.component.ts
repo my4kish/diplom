@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { NotificationService } from '../../services/notifiaction.service';
+import { DrawerModule } from 'primeng/drawer';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,7 @@ import { NotificationService } from '../../services/notifiaction.service';
     CommonModule,
     ButtonModule,
     OverlayBadgeModule,
+    DrawerModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
@@ -33,18 +35,18 @@ import { NotificationService } from '../../services/notifiaction.service';
 })
 export class HeaderComponent implements OnInit {
   private readonly notificationService = inject(NotificationService);
-  private readonly router = inject(Router);
+  public readonly router = inject(Router);
   profileItems: MenuItem[] | undefined;
 
   ngOnInit() {
     this.profileItems = [
       {
-        label: 'Главная',
+        label: 'Басты бет',
         icon: 'pi pi-home',
         command: () => this.router.navigate(['/main']),
       },
       {
-        label: 'Проекты',
+        label: 'Жобалар',
         icon: 'pi pi-folder',
         badge: '5',
         command: () => this.router.navigate(['/projects']),
@@ -55,7 +57,7 @@ export class HeaderComponent implements OnInit {
         command: () => this.router.navigate(['/profile']),
       },
       {
-        label: 'Выйти',
+        label: 'Шығу',
         icon: 'pi pi-sign-out',
         // command: () => this.router.navigate(['/login'])
       },

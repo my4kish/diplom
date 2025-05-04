@@ -7,14 +7,16 @@
     />
   </div>
   <p class="m-0">
-    Status:
+    Мәртебесі:
     <p-tag
       [value]="switchStatus(item.status)"
       [severity]="getSeverity(item.status)"
     />
   </p>
-  <div class="flex align-items-center justify-content-between mt-2">
-    <app-users-group-tooltip></app-users-group-tooltip>
+  <div class="flex align-items-center gap-4 mt-2">
+    <div class="flex flex-row gap-2 align-items-start">
+      <p-avatar icon="pi pi-user" [style]="{ 'background-color': '#dee9fc', 'color': '#1a2551' }" shape="circle"/>
+    </div>
     <div class="flex gap-2">
       <div class="flex align-items-center">
         <i class="pi pi-comment"></i>
@@ -26,5 +28,5 @@
       </div>
     </div>
   </div>
-  <p class="mb-0 mt-2 text-500 text-xs">Создан: 20 май, 2025</p>
+  <p class="mb-0 mt-2 text-500 text-xs">Құрылды: 20 май, 2025</p>
 </p-card>

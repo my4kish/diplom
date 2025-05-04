@@ -3,11 +3,11 @@
     <p class="text-4xl font-bold mt-0 text-900">Item title</p>
     <div class="flex gap-8">
       <div class="flex flex-column gap-2">
-        <p class="m-0 text-xl text-500">Статус</p>
+        <p class="m-0 text-xl text-500">Мәртебесі</p>
         <p-tag value="В прогрессе" severity="info" />
       </div>
       <div class="flex flex-column gap-2">
-        <p class="m-0 text-xl text-500">Исполнитель</p>
+        <p class="m-0 text-xl text-500">Орындаушы</p>
         <div class="flex align-items-center gap-2">
           <ng-container *ngIf="usersLength === 1; else moreUsers">
             <p-avatar
@@ -17,21 +17,24 @@
             <p class="m-0 text-xl text-900">Имя Фамилия</p>
           </ng-container>
           <ng-template #moreUsers>
-            <app-users-group-tooltip></app-users-group-tooltip>
+            <div class="flex flex-row gap-2 align-items-start">
+              <p-avatar icon="pi pi-user" [style]="{ 'background-color': '#dee9fc', 'color': '#1a2551' }" shape="circle" size="large"/>
+              <p class="m-0 text-900">Аты жөні</p>
+            </div>
           </ng-template>
         </div>
       </div>
       <div class="flex flex-column gap-2">
-        <p class="m-0 text-xl text-500">Срок выполнения</p>
+        <p class="m-0 text-xl text-500">Орындау мерзімі</p>
         <p class="m-0 text-xl text-900">20 мая, 2025</p>
       </div>
       <div class="flex flex-column gap-2">
-        <p class="m-0 text-xl text-500">Приоритет</p>
+        <p class="m-0 text-xl text-500">Басымдық</p>
         <p-tag value="Высокий" severity="danger" />
       </div>
     </div>
     <p-divider />
-    <p class="text-2xl font-bold text-900">Описание</p>
+    <p class="text-2xl font-bold text-900">Сипаттамасы</p>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -60,7 +63,7 @@
       vitae sapien. Morbi dapibus luctus odio.
     </p>
     <p-divider />
-    <p class="text-2xl font-bold text-900">Вложения</p>
+    <p class="text-2xl font-bold text-900">Тіркемелер</p>
     <p>Фото</p>
     <p-divider />
     <app-task-comments-list></app-task-comments-list>

@@ -4,8 +4,8 @@ import { TagModule } from 'primeng/tag';
 import { ChipModule } from 'primeng/chip';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { UsersGroupTooltipComponent } from '../../../shared/users-group-tooltip/users-group-tooltip.component';
 import { Severity } from '../../../../interfaces/severity';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-task-card',
@@ -15,7 +15,7 @@ import { Severity } from '../../../../interfaces/severity';
     TagModule,
     ChipModule,
     RouterLink,
-    UsersGroupTooltipComponent,
+    AvatarModule
   ],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss',
@@ -55,13 +55,13 @@ export class TaskCardComponent {
   public switchStatus(status: string) {
     switch (status) {
       case 'new':
-        return 'Новая';
+        return 'Жаңа';
       case 'in_progress':
-        return 'В процессе';
+        return 'Жұмыс барысында';
       case 'completed':
-        return 'Выполнено';
+        return 'Орындалды';
       case 'overdue':
-        return 'Просрочено';
+        return 'Мерзімі өтті';
       default:
         return undefined;
     }

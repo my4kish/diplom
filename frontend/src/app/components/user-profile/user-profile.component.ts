@@ -25,7 +25,7 @@ export class UserProfileComponent implements OnInit {
     const textColor = documentStyle.getPropertyValue('--p-text-color');
 
     this.data = {
-      labels: ['Выполненные', 'В процессе', 'Просроченные'],
+      labels: ['Орындалған', 'Жұмыс барысында', 'Мерзімі өтті'],
       datasets: [
         {
           data: [3, 5, 10],
