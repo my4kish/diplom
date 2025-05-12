@@ -4,14 +4,20 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
+import { TabsModule } from 'primeng/tabs';
 
 @Component({
   selector: 'app-admin-panel',
-  imports: [CommonModule, CardModule, ButtonModule, PanelModule, TableModule],
+  imports: [
+    CommonModule,
+    CardModule,
+    ButtonModule,
+    PanelModule,
+    TableModule,
+    TabsModule,
+  ],
   templateUrl: './admin-panel.component.html',
   styleUrl: './admin-panel.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminPanelComponent {
-
-}
+export class AdminPanelComponent {}

@@ -18,7 +18,12 @@
           </ng-container>
           <ng-template #moreUsers>
             <div class="flex flex-row gap-2 align-items-start">
-              <p-avatar icon="pi pi-user" [style]="{ 'background-color': '#dee9fc', 'color': '#1a2551' }" shape="circle" size="large"/>
+              <p-avatar
+                icon="pi pi-user"
+                [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
+                shape="circle"
+                size="large"
+              />
               <p class="m-0 text-900">Аты жөні</p>
             </div>
           </ng-template>
@@ -30,7 +35,7 @@
       </div>
       <div class="flex flex-column gap-2">
         <p class="m-0 text-xl text-500">Басымдық</p>
-        <p-tag value="Высокий" severity="danger" />
+        <p-tag value="Жоғары" severity="danger" />
       </div>
     </div>
     <p-divider />
@@ -64,7 +69,14 @@
     </p>
     <p-divider />
     <p class="text-2xl font-bold text-900">Тіркемелер</p>
-    <p>Фото</p>
+    <p-galleria [value]="images" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '640px' }" [numVisible]="5">
+      <ng-template #item let-item>
+        <img class="w-30rem h-30rem" [src]="item.itemImageSrc" style="width: 100%" />
+      </ng-template>
+      <ng-template #thumbnail let-item>
+        <img class="w-5rem" [src]="item.thumbnailImageSrc" />
+      </ng-template>
+    </p-galleria>
     <p-divider />
     <app-task-comments-list></app-task-comments-list>
   </p-panel>

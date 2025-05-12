@@ -1,11 +1,11 @@
-generator client {
-  provider = "prisma-client-js"
-}
+  generator client {
+    provider = "prisma-client-js"
+  }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+  datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+  }
 
 model User {
   id            String         @id @default(uuid())
@@ -73,12 +73,6 @@ model Notification {
   message     String
   isRead      Boolean  @default(false)
   createdAt   DateTime @default(now())
-}
-
-model Role {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  permissions String[] // массив разрешений, например: ["create_task", "delete_project"]
 }
 
 enum RoleType {

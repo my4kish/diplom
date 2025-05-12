@@ -1,32 +1,68 @@
 <div class="flex justify-content-center align-items-center min-h-screen">
-  <p-card header="Регистрация" [style]="{ width: '400px' }">
-    <form>
-      <div class="field">
-        <label for="username">Имя пользователя</label>
-        <input pInputText class="w-full">
+  <p-card header="Тіркелу" [style]="{ width: '400px' }">
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+      <div class="my-2">
+        <label for="firstName">Аты</label>
+        <input
+          pInputText
+          id="firstName"
+          formControlName="firstName"
+          class="w-full"
+          maxlength="50"
+        />
       </div>
-
-      <div class="field">
+      <div class="my-2">
+        <label for="lastName">Жөні</label>
+        <input
+          pInputText
+          id="lastName"
+          formControlName="lastName"
+          class="w-full"
+          maxlength="50"
+        />
+      </div>
+      <div class="my-2">
         <label for="email">Email</label>
-        <input pInputText class="w-full">
+        <input pInputText id="email" formControlName="email" class="w-full" />
       </div>
-
-      <div class="field">
-        <label for="password">Пароль</label>
-        <input pInputText class="w-full">
+      <div class="my-2">
+        <label for="password">Құпиясөз</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          [inputStyle]="{ width: '100%' }"
+          [style]="{ width: '100%' }"
+        />
+      </div>  
+      <div *ngIf="registrationForm.get('password')?.errors?.['minlength'] && registrationForm.get('password')?.touched">
+        <small class="text-red-500">Құпиясөз ұзындығы 6 таңбадан асуы қажет.</small>
       </div>
-
-      <div class="field">
-        <label for="confirm-password">Подтвердите пароль</label>
-        <input pInputText class="w-full">
+      <div class="my-2">
+        <div>
+          <label for="confirmPassword">Құпиясөзді растаңыз</label>
+          <p-password
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            [feedback]="false"
+            [toggleMask]="true"
+            [inputStyle]="{ width: '100%' }"
+            [style]="{ width: '100%' }"
+          />
+        </div>
+        <div *ngIf="registrationForm.hasError('passwordMismatch') && registrationForm.get('confirmPassword')?.touched">
+          <small class="text-red-500">Құпиясөздер сәйкес келмейді.</small>
+        </div>
       </div>
-
       <p-button
-      type="submit"
-      label="Регистрация"
-      styleClass="w-full"
-      [disabled]="true"
-    ></p-button>
+        type="submit"
+        label="Тіркелу"
+        styleClass="w-full"
+        [disabled]="registrationForm.invalid"
+      ></p-button>
     </form>
+    <p-divider />
+    <a href="/login">Аккаунт бар ма?</a>
   </p-card>
 </div>

@@ -15,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { NotificationService } from '../../services/notifiaction.service';
 import { DrawerModule } from 'primeng/drawer';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -36,6 +37,7 @@ import { DrawerModule } from 'primeng/drawer';
 export class HeaderComponent implements OnInit {
   private readonly notificationService = inject(NotificationService);
   public readonly router = inject(Router);
+  public readonly authService = inject(AuthService);
   profileItems: MenuItem[] | undefined;
 
   ngOnInit() {
@@ -59,7 +61,7 @@ export class HeaderComponent implements OnInit {
       {
         label: 'Шығу',
         icon: 'pi pi-sign-out',
-        // command: () => this.router.navigate(['/login'])
+        command: () => this.logout()
       },
     ];
   }
@@ -76,6 +78,10 @@ export class HeaderComponent implements OnInit {
     const element = document.querySelector('html');
     const isDark = element!.classList.toggle('my-app-dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }
+
+  public logout() {
+    this.authService.logout();
   }
   
 }

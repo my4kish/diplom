@@ -1,22 +1,31 @@
 <div class="flex justify-content-center align-items-center min-h-screen">
-  <p-card header="Вход" [style]="{ width: '400px' }">
-    <form>
-      <div class="field">
+  <p-card header="Жүйеге кіру" [style]="{ width: '400px' }">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="my-2">
         <label for="email">Email</label>
-        <input pInputText class="w-full">
+        <input formControlName="email" pInputText class="w-full" />
       </div>
 
-      <div class="field">
-        <label for="password">Пароль</label>
-        <input pInputText class="w-full">
+      <div class="my-2">
+        <label for="password">Құпиясөз</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          [inputStyle]="{ width: '100%' }"
+          [style]="{ width: '100%' }"
+        />
       </div>
 
       <p-button
-      type="submit"
-      label="Войти"
-      styleClass="w-full"
-      [disabled]="true"
-    ></p-button>
+        type="submit"
+        label="Кіру"
+        styleClass="w-full"
+        [disabled]="loginForm.invalid"
+      ></p-button>
     </form>
+    <p-divider />
+    <a href="/register">Аккаунт жоқ па?</a>
   </p-card>
 </div>

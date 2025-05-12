@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -7,6 +7,7 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Severity } from '../../interfaces/severity';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-main',
@@ -24,6 +25,12 @@ import { Severity } from '../../interfaces/severity';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
+
+  private readonly userService = inject(UserService);
+
+  constructor() {
+
+  }
 
   tasks = [
     {
