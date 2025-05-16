@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import {
   CdkDragDrop,
@@ -10,6 +10,13 @@ import {
 import { CommonModule } from '@angular/common';
 import { TaskCardComponent } from './task-card/task-card.component';
 import { ButtonModule } from 'primeng/button';
+import {
+  Dialog,
+  DialogRef,
+  DIALOG_DATA,
+  DialogModule,
+} from '@angular/cdk/dialog';
+import { TaskFormComponent } from '../task-form/task-form.component';
 
 @Component({
   selector: 'app-task-list',
@@ -19,17 +26,26 @@ import { ButtonModule } from 'primeng/button';
     PanelModule,
     CommonModule,
     TaskCardComponent,
-    ButtonModule
+    ButtonModule,
+    DialogModule,
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent {
+  dialog = inject(Dialog);
+
+  public openDialog(): void {
+    const dialogRef = this.dialog.open<string>(TaskFormComponent);
+
+    dialogRef.closed.subscribe();
+  }
+
   public readonly tasks = [
     {
       _id: '60d21b4667d0d8992e610c85',
-      title: 'New Task 1',
+      title: 'aaaaaaaaaaaaaaaaaaa',
       description: 'This is a new task 1',
       status: 'new',
       priority: 'high',

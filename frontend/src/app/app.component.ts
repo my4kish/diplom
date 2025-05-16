@@ -8,6 +8,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent implements OnInit {
   private readonly router = inject(Router);
-  public showHeader: boolean = false;
+  private readonly authService = inject(AuthService);
+  public showHeader: boolean = this.authService.isAuth;
 
   constructor() {
     this.router.events.subscribe((event: any) => {

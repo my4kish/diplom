@@ -9,11 +9,17 @@ import {
   UseGuards,
   Req,
   BadRequestException,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -42,8 +48,21 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto); // ⬅️ без +
+  @UseInterceptors(FileInterceptor('avatar'))
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({maxSize: 1000000}),
+          new FileTypeValidator({fileType: "image/"})
+        ],
+        fileIsRequired: false
+      })
+    ) file: Express.Multer.File,
+  ) {
+    return this.userService.update(id, updateUserDto, file);
   }
 
   @Delete(':id')

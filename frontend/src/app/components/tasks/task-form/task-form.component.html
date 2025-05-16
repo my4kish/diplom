@@ -1,1 +1,124 @@
-<p>task-form works!</p>
+<p-card>
+  <p-scrollpanel [style]="{ width: '100%', height: '60vh' }">
+    <p class="text-2xl font-bold mt-0 mb-4">Тапсырма жасау</p>
+    <form [formGroup]="taskForm">
+      <div class="flex flex-wrap gap-3">
+        <div class="flex flex-column gap-3 mb-4 w-25rem">
+          <div class="flex flex-column">
+            <label class="font-semibold w-24">Атауы*</label>
+            <small>(Атау 22 таңбадан аспауы керек.)</small>
+            <input
+              formControlName="title"
+              pInputText
+              autocomplete="off"
+              [maxlength]="22"
+            />
+            <div
+              *ngIf="
+                taskForm.get('title')?.invalid && taskForm.get('title')?.touched
+              "
+            >
+              <div *ngIf="taskForm.get('title')?.errors?.['required']">
+                <small class="text-red-500" id="username-help"
+                  >Міндетті түрде толтырылуы керек.</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-column">
+            <label for="email" class="font-semibold w-24">Сипаттама</label>
+            <small>(Сипаттамасы 300 таңбадан аспауы керек.)</small>
+            <textarea
+              formControlName="description"
+              rows="5"
+              cols="30"
+              pTextarea
+              [autoResize]="true"
+              [maxLength]="300"
+            ></textarea>
+          </div>
+          <div class="flex flex-column">
+            <p-select
+              formControlName="priority"
+              [checkmark]="true"
+              [options]="taskPriority"
+              placeholder="Тапсырманың басымдығы"
+            ></p-select>
+            <div
+              *ngIf="
+                taskForm.get('priority')?.invalid &&
+                taskForm.get('priority')?.touched
+              "
+            >
+              <div *ngIf="taskForm.get('priority')?.errors?.['required']">
+                <small class="text-red-500" id="username-help"
+                  >Міндетті түрде таңдалуы керек.</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-column">
+            <p-select
+              formControlName="assignedTo"
+              [checkmark]="true"
+              placeholder="Тапсырма орындаушыны таңдау"
+            ></p-select>
+            <div
+              *ngIf="
+                taskForm.get('assignedTo')?.invalid &&
+                taskForm.get('assignedTo')?.touched
+              "
+            >
+              <div *ngIf="taskForm.get('assignedTo')?.errors?.['required']">
+                <small class="text-red-500" id="username-help"
+                  >Міндетті түрде таңдалуы керек.</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-column gap-3 mb-4 w-25rem">
+          <div class="flex flex-column gap-1">
+            <label class="font-semibold w-24"> Мерзімі </label>
+            <p-datepicker
+              formControlName="dueDate"
+              [iconDisplay]="'input'"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+            ></p-datepicker>
+            <div
+              *ngIf="
+                taskForm.get('dueDate')?.invalid &&
+                taskForm.get('dueDate')?.touched
+              "
+            >
+              <div *ngIf="taskForm.get('dueDate')?.errors?.['required']">
+                <small class="text-red-500" id="username-help"
+                  >Міндетті түрде таңдалуы керек.</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-column gap-1">
+            <label class="font-semibold w-24"> Сурет таңданыз </label>
+            <p-fileupload
+              accept="image/*"
+              maxFileSize="1000000"
+              chooseIcon="pi pi-upload"
+              chooseLabel="Таңданыз"
+              multiple="true"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-content-center gap-4">
+        <p-button
+          label="Баст тарту"
+          severity="secondary"
+          (click)="dialogRef.close()"
+        />
+        <p-button label="Жасау" />
+      </div>
+    </form>
+  </p-scrollpanel>
+</p-card>

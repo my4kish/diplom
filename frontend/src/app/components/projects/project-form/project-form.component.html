@@ -37,6 +37,14 @@
           [maxLength]="300"
         ></textarea>
       </div>
+      @if(isEdit) {
+      <p-select
+        formControlName="status"
+        [checkmark]="true"
+        [options]="projectStatus"
+        placeholder="Жобаның мәртебесі"
+      ></p-select>
+      }
     </div>
     <div class="flex justify-content-end gap-2">
       <p-button
@@ -44,11 +52,19 @@
         severity="secondary"
         (click)="dialogRef.close()"
       />
+      @if (isEdit) {
       <p-button
         label="Сақтау"
-        (click)="onSubmit()"
+        (click)="updateProject()"
         [disabled]="projectForm.invalid"
       />
+      } @else {
+      <p-button
+        label="Жасау"
+        (click)="createProject()"
+        [disabled]="projectForm.invalid"
+      />
+      }
     </div>
   </form>
 </p-card>

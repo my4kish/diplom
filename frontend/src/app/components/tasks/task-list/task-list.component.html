@@ -7,9 +7,9 @@
           <p-button
             class="task-add"
             icon="pi pi-plus"
-            variant="text"
             [rounded]="true"
-            severity="secondary"
+            severity="success"
+            (onClick)="openDialog()"
           ></p-button>
         </div>
       </ng-template>
@@ -33,13 +33,6 @@
       <ng-template #header>
         <div class="flex align-items-center justify-content-between w-full">
           <p class="text-900 m-0 font-bold">Жұмыс барысында</p>
-          <p-button
-            class="task-add"
-            icon="pi pi-plus"
-            variant="text"
-            [rounded]="true"
-            severity="secondary"
-          ></p-button>
         </div>
       </ng-template>
       <div
@@ -62,13 +55,6 @@
       <ng-template #header>
         <div class="flex align-items-center justify-content-between w-full">
           <p class="text-900 m-0 font-bold">Орындалды</p>
-          <p-button
-            class="task-add"
-            icon="pi pi-plus"
-            variant="text"
-            [rounded]="true"
-            severity="secondary"
-          ></p-button>
         </div>
       </ng-template>
       <div
@@ -91,13 +77,6 @@
       <ng-template #header>
         <div class="flex align-items-center justify-content-between w-full">
           <p class="text-900 m-0 font-bold">Мерзімі өтті</p>
-          <p-button
-            class="task-add"
-            icon="pi pi-plus"
-            variant="text"
-            [rounded]="true"
-            severity="secondary"
-          ></p-button>
         </div>
       </ng-template>
       <div

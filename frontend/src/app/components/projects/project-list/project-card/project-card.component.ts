@@ -2,13 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  EventEmitter,
   inject,
   Input,
+  Output,
 } from '@angular/core';
 import {
   Dialog,
-  DialogRef,
-  DIALOG_DATA,
   DialogModule,
 } from '@angular/cdk/dialog';
 import { CardModule } from 'primeng/card';
@@ -37,18 +37,25 @@ import { Severity } from '../../../../interfaces/severity';
 export class ProjectCardComponent {
   private readonly dialog = inject(Dialog);
   private readonly destroyRef = inject(DestroyRef);
-  public readonly projectId = 2;
-  public readonly projectLink = `/projects/${this.projectId}/tasks`;
   public visible: boolean = false;
-
+  
   @Input()
   project: any;
+  
+  @Output()
+  deleteProject = new EventEmitter;
+
+  public onDeleteProject(event: Event) {
+    this.deleteProject.emit();
+  }
 
   public openDialog(): void {
     const dialogRef = this.dialog.open<string>(ProjectFormComponent, {
       data: {
+        id: this.project.id,
         name: this.project.name,
         description: this.project.description,
+        status: this.project.status,
         isEdit: true,
       },
     });

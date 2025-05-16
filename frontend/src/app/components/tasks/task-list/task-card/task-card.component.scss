@@ -2,3 +2,9 @@
 .task-card {
   --p-card-background: var(--p-custom-cardcolor) !important;
 }
+
+.task-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
