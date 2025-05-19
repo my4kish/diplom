@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import {
   CdkDragDrop,
@@ -12,11 +12,12 @@ import { TaskCardComponent } from './task-card/task-card.component';
 import { ButtonModule } from 'primeng/button';
 import {
   Dialog,
-  DialogRef,
-  DIALOG_DATA,
   DialogModule,
 } from '@angular/cdk/dialog';
 import { TaskFormComponent } from '../task-form/task-form.component';
+import { TaskService } from '../../../services/task.service';
+import { Task, TaskStatus } from '../../../interfaces/models/task.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-task-list',
@@ -34,7 +35,21 @@ import { TaskFormComponent } from '../task-form/task-form.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent {
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly taskService = inject(TaskService);
+  private readonly route = inject(ActivatedRoute);
+  public projectId!: string;
   dialog = inject(Dialog);
+
+  tasks: Task[] = [];
+
+  constructor() {
+    this.projectId = this.route.snapshot.paramMap.get('projectId')!;
+    this.taskService.findByProject(this.projectId).subscribe((list) => {
+      this.tasks = list;
+      this.cdr.markForCheck();
+    });
+  }
 
   public openDialog(): void {
     const dialogRef = this.dialog.open<string>(TaskFormComponent);
@@ -42,86 +57,21 @@ export class TaskListComponent {
     dialogRef.closed.subscribe();
   }
 
-  public readonly tasks = [
-    {
-      _id: '60d21b4667d0d8992e610c85',
-      title: 'aaaaaaaaaaaaaaaaaaa',
-      description: 'This is a new task 1',
-      status: 'new',
-      priority: 'high',
-      dueDate: '2025-04-01T00:00:00Z',
-      assignedTo: ['60d21b4667d0d8992e610c90'],
-      projectId: '60d21b4667d0d8992e610c95',
-      comments: ['60d21b4667d0d8992e610c99'],
-      createdAt: '2025-03-20T00:00:00Z',
-      updatedAt: '2025-03-21T00:00:00Z',
-    },
-    {
-      _id: '60d21b4667d0d8992e610c86',
-      title: 'New Task 2',
-      description: 'This is a new task 2',
-      status: 'in_progress',
-      priority: 'medium',
-      dueDate: '2025-04-05T00:00:00Z',
-      assignedTo: ['60d21b4667d0d8992e610c91'],
-      projectId: '60d21b4667d0d8992e610c96',
-      comments: ['60d21b4667d0d8992e610c98'],
-      createdAt: '2025-03-18T00:00:00Z',
-      updatedAt: '2025-03-19T00:00:00Z',
-    },
-    {
-      _id: '60d21b4667d0d8992e610c87',
-      title: 'New Task 3',
-      description: 'This is a new task 3',
-      status: 'completed',
-      priority: 'low',
-      dueDate: '2025-03-15T00:00:00Z',
-      assignedTo: ['60d21b4667d0d8992e610c92'],
-      projectId: '60d21b4667d0d8992e610c97',
-      comments: ['60d21b4667d0d8992e610c97'],
-      createdAt: '2025-03-10T00:00:00Z',
-      updatedAt: '2025-03-16T00:00:00Z',
-    },
-    {
-      _id: '60d21b4667d0d8992e610c88',
-      title: 'New Task 4',
-      description: 'This is a new task 4',
-      status: 'overdue',
-      priority: 'high',
-      dueDate: '2025-03-05T00:00:00Z',
-      assignedTo: ['60d21b4667d0d8992e610c93'],
-      projectId: '60d21b4667d0d8992e610c98',
-      comments: ['60d21b4667d0d8992e610c96'],
-      createdAt: '2025-02-25T00:00:00Z',
-      updatedAt: '2025-03-06T00:00:00Z',
-    },
-    {
-      _id: '60d21b4667d0d8992e610c89',
-      title: 'New Task 5',
-      description: 'This is a new task 5',
-      status: 'in_progress',
-      priority: 'medium',
-      dueDate: '2025-04-10T00:00:00Z',
-      assignedTo: ['60d21b4667d0d8992e610c94'],
-      projectId: '60d21b4667d0d8992e610c99',
-      comments: ['60d21b4667d0d8992e610c95'],
-      createdAt: '2025-03-22T00:00:00Z',
-      updatedAt: '2025-03-23T00:00:00Z',
-    },
-  ];
+  // вместо readonly поля — геттеры
+  get newTasks(): Task[] {
+    return this.tasks.filter(t => t.status === 'new');
+  }
+  get inProgress(): Task[] {
+    return this.tasks.filter(t => t.status === 'in_progress');
+  }
+  get completed(): Task[] {
+    return this.tasks.filter(t => t.status === 'completed');
+  }
+  get overdue(): Task[] {
+    return this.tasks.filter(t => t.status === 'overdue');
+  }
 
-  public readonly new = this.tasks.filter((task) => task.status === 'new');
-  public readonly inProgress = this.tasks.filter(
-    (task) => task.status === 'in_progress'
-  );
-  public readonly completed = this.tasks.filter(
-    (task) => task.status === 'completed'
-  );
-  public readonly overdue = this.tasks.filter(
-    (task) => task.status === 'overdue'
-  );
-
-  drop(event: CdkDragDrop<any>) {
+  drop(event: CdkDragDrop<Task[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -129,18 +79,30 @@ export class TaskListComponent {
         event.currentIndex
       );
     } else {
-      const task = event.previousContainer.data[event.previousIndex];
+      const task     = event.previousContainer.data[event.previousIndex];
+      const newStatus = event.container.id as TaskStatus;
 
-      const newStatus = event.container.id;
-
+      if (task.status === newStatus) {
+        return;
+      }
+      // 1) обновляем статус на сервере
+      this.taskService.updateTask(task.id, { status: newStatus })
+        .subscribe(updated => {
+          // 2) обновляем локальный массив — новая ссылка
+          this.tasks = this.tasks.map(t =>
+            t.id === updated.id ? updated : t
+          );
+          // 3) триггерим OnPush
+          this.cdr.markForCheck();
+          // 4) переносим карточку в другую колонку
+          transferArrayItem(
+            event.previousContainer.data,
+            event.container.data,
+            event.previousIndex,
+            event.currentIndex
+          );
+        });
       task.status = newStatus;
-
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
     }
   }
 }

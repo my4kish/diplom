@@ -8,6 +8,10 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Severity } from '../../interfaces/severity';
 import { UserService } from '../../services/user.service';
+import { TaskService } from '../../services/task.service';
+import { AsyncPipe } from '@angular/common';
+import { Task } from '../../interfaces/models/task.model';
+import { User } from '../../interfaces/models/user.model';
 
 @Component({
   selector: 'app-main',
@@ -25,54 +29,19 @@ import { UserService } from '../../services/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
-
   private readonly userService = inject(UserService);
+  private readonly tasksService = inject(TaskService);
+  tasks: Task[] = [];
+  user: User = {} as User;
 
   constructor() {
-
-  }
-
-  tasks = [
-    {
-      name: 'Сделать отчёт',
-      status: 'in_progress',
-      project: 'CRM система',
-      assignee: ['Айгүл', 'Анау', 'Мынау'],
-    },
-    {
-      name: 'Починить баг',
-      status: 'completed',
-      project: 'Сайт компании',
-      assignee: ['Нурлан', 'Анау'],
-    },
-    {
-      name: 'Добавить фильтры',
-      status: 'new',
-      project: 'Панель администратора',
-      assignee: ['Данияр', 'Анау', 'Мынау'],
-    },
-    {
-      name: 'что то просроченное',
-      status: 'overdue',
-      project: 'project',
-      assignee: ['aaaa', 'Анау'],
-    },
-    {
-      name: 'что то просроченное',
-      status: 'overdue',
-      project: 'project',
-      assignee: ['aaaa', 'Анау', 'Мынау', 'Мыны'],
-    },
-    {
-      name: 'что то просроченное',
-      status: 'overdue',
-      project: 'project',
-      assignee: ['aaaa', 'Анау', 'Мынау'],
-    },
-  ];
-
-  get displayedTasks() {
-    return this.tasks.slice(0, 5)
+    this.tasksService.loadTasks();
+    this.tasksService.findByUser().subscribe((list) => {
+      this.tasks = list;
+    });
+    this.userService.getCurrentUser().subscribe((user) => {
+      this.user = user;
+    });
   }
 
   public getSeverity(status: string): Severity {
@@ -103,5 +72,27 @@ export class MainComponent {
       default:
         return undefined;
     }
+  }
+
+  public getTasksByStatus(status: string) {
+    switch (status) {
+      case 'in_progress':
+        return this.tasks.filter((t) => t.status === 'in_progress').length;
+      case 'completed':
+        return this.tasks.filter((t) => t.status === 'completed').length;
+      case 'overdue':
+        return this.tasks.filter((t) => t.status === 'overdue').length;
+      default:
+        return 0;
+    }
+  }
+
+  public get firstFiveTasks(): Task[] {
+    return this.tasks
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+      .slice(0, 5);
   }
 }

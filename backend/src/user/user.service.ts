@@ -83,7 +83,7 @@ export class UserService {
       where: { id },
       data: {
         ...updateUserDto,
-        avatarUrl: uniqueAvatarKey,
+        avatarUrl: `https://arlan-diplom-bucket.s3.eu-north-1.amazonaws.com/${uniqueAvatarKey}`,
       },
     });
 

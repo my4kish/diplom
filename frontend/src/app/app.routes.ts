@@ -11,80 +11,33 @@ import { authGuard } from './guards/auth.guard';
 import { guestGuard } from './guards/guest.guard';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: '', redirectTo: 'main', pathMatch: 'full' },
-  { path: 'main', component: MainComponent },
-  {
-    path: 'projects',
-    component: ProjectListComponent,
-  },
-  {
-    path: 'projects/:projectId/tasks',
-    component: TaskListComponent,
-  },
-  {
-    path: 'task/:taskId',
-    component: TaskDetailComponent,
-  },
-  {
-    path: 'notifications',
-    component: NotificationsComponent,
-  },
-  { path: 'profile', component: MyProfileComponent },
-  {
-    path: 'all-tasks',
-    loadComponent: () =>
-      import('./components/all-tasks/all-tasks.component').then(
-        (m) => m.AllTasksComponent
-      ),
-  },
-  {
-    path: 'profiles/:userId',
-    loadComponent: () =>
-      import('./components/user-profile/user-profile.component').then(
-        (m) => m.UserProfileComponent
-      ),
-  },
-  {
-    path: 'admin',
-    loadComponent: () =>
-      import('./components/admin-panel/admin-panel.component').then(
-        (m) => m.AdminPanelComponent
-      ),
-  },
-  // { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
-  // { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
+  // { path: 'login', component: LoginComponent },
+  // { path: 'register', component: RegisterComponent },
   // { path: '', redirectTo: 'main', pathMatch: 'full' },
-  // { path: 'main', component: MainComponent, canActivate: [authGuard] },
+  // { path: 'main', component: MainComponent },
   // {
   //   path: 'projects',
   //   component: ProjectListComponent,
-  //   canActivate: [authGuard],
   // },
   // {
   //   path: 'projects/:projectId/tasks',
   //   component: TaskListComponent,
-  //   canActivate: [authGuard],
   // },
   // {
   //   path: 'task/:taskId',
   //   component: TaskDetailComponent,
-  //   canActivate: [authGuard],
   // },
   // {
   //   path: 'notifications',
   //   component: NotificationsComponent,
-  //   canActivate: [authGuard],
   // },
-  // { path: 'profile', component: MyProfileComponent, canActivate: [authGuard] },
+  // { path: 'profile', component: MyProfileComponent },
   // {
   //   path: 'all-tasks',
   //   loadComponent: () =>
   //     import('./components/all-tasks/all-tasks.component').then(
   //       (m) => m.AllTasksComponent
   //     ),
-  //   canActivate: [authGuard],
   // },
   // {
   //   path: 'profiles/:userId',
@@ -92,7 +45,6 @@ export const routes: Routes = [
   //     import('./components/user-profile/user-profile.component').then(
   //       (m) => m.UserProfileComponent
   //     ),
-  //   canActivate: [authGuard],
   // },
   // {
   //   path: 'admin',
@@ -100,6 +52,54 @@ export const routes: Routes = [
   //     import('./components/admin-panel/admin-panel.component').then(
   //       (m) => m.AdminPanelComponent
   //     ),
-  //   canActivate: [authGuard],
   // },
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
+  { path: '', redirectTo: 'main', pathMatch: 'full' },
+  { path: 'main', component: MainComponent, canActivate: [authGuard] },
+  {
+    path: 'projects',
+    component: ProjectListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'projects/:projectId/tasks',
+    component: TaskListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'task/:taskId',
+    component: TaskDetailComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'notifications',
+    component: NotificationsComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'profile', component: MyProfileComponent, canActivate: [authGuard] },
+  {
+    path: 'all-tasks',
+    loadComponent: () =>
+      import('./components/all-tasks/all-tasks.component').then(
+        (m) => m.AllTasksComponent
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'profiles/:userId',
+    loadComponent: () =>
+      import('./components/user-profile/user-profile.component').then(
+        (m) => m.UserProfileComponent
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./components/admin-panel/admin-panel.component').then(
+        (m) => m.AdminPanelComponent
+      ),
+    canActivate: [authGuard],
+  },
 ];

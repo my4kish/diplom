@@ -9,8 +9,7 @@
 
     <p-table
       [value]="tasks"
-      [paginator]="true"
-      [rows]="5"
+
       [rowHover]="true"
       [tableStyle]="{ 'min-width': '100rem'}"
     >
@@ -26,7 +25,7 @@
 
       <ng-template pTemplate="body" let-task>
         <tr [routerLink]="['/task', task.id]" class="cursor-pointer" >
-          <td>{{ task.name }}</td>
+          <td>{{ task.title }}</td>
           <td>
             <div class="flex align-items-center gap-2">
               <p-tag
@@ -45,7 +44,9 @@
               ></button>
             </div>
           </td>
-          <td>{{ task.project }}</td>
+          <td>{{ task.project.name }}</td>
+          <td>{{ task.createdAt }}</td>
+          <td>{{ task.priority }}</td>
         </tr>
       </ng-template>
     </p-table>

@@ -1,9 +1,9 @@
 <div class="flex flex-column justify-content-center pb-5">
   <p class="flex justify-content-center mb-0 text-5xl font-bold">
-    Қош келдіңіз, Аты
+    Қош келдіңіз, {{ user.firstName }} {{ user.lastName }}
   </p>
   <p class="flex justify-content-center mt-1 text-xl text-500">
-    Сіздің рөліңіз: Админ / белсенді тапсырмалар: 5
+    Сіздің рөліңіз: {{ user.role }} / белсенді тапсырмалар: {{ tasks.length }}
   </p>
   <div class="statistic-list flex gap-3 justify-content-center mb-3">
     <p-card class="stat-card">
@@ -11,7 +11,9 @@
         <p-avatar icon="pi pi-check" class="mr-2 text-green-600" size="large" />
         <div>
           <p class="my-0 text-900">Орындалды</p>
-          <p class="my-0 text-900 font-bold">12</p>
+          <p class="my-0 text-900 font-bold">
+            {{ getTasksByStatus("completed") }}
+          </p>
         </div>
       </div>
     </p-card>
@@ -20,7 +22,9 @@
         <p-avatar icon="pi pi-clock" class="mr-2 text-blue-600" size="large" />
         <div>
           <p class="my-0 text-900">Жұмыс барысында</p>
-          <p class="my-0 text-900 font-bold">5</p>
+          <p class="my-0 text-900 font-bold">
+            {{getTasksByStatus('in_progress')}}
+          </p>
         </div>
       </div>
     </p-card>
@@ -29,7 +33,9 @@
         <p-avatar icon="pi pi-times" class="mr-2 text-red-600" size="large" />
         <div>
           <p class="my-0 text-900">Мерзімі өткен</p>
-          <p class="my-0 text-900 font-bold">2</p>
+          <p class="my-0 text-900 font-bold">
+            {{getTasksByStatus('overdue')}}
+          </p>
         </div>
       </div>
     </p-card>
@@ -39,11 +45,11 @@
       <ng-template #header>
         <div class="flex align-items-center gap-2 ml-3">
           <i class="pi pi-clock text-xl font-bold"></i>
-          <p class="m-0 text-900 font-bold text-xl">Соңғы міндеттер </p>
+          <p class="m-0 text-900 font-bold text-xl">Соңғы міндеттер</p>
         </div>
       </ng-template>
       <p-table
-        [value]="displayedTasks"
+        [value]="firstFiveTasks"
         [rowHover]="true"
         [tableStyle]="{ 'min-width': '50rem' }"
       >
@@ -56,15 +62,16 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-task>
-          <tr routerLink="/task/:id" class="cursor-pointer">
-            <td>{{ task.name }}</td>
+          <tr routerLink="/task/{{ task.id }}" class="cursor-pointer">
+            <td>{{ task.title }}</td>
             <td>
               <p-tag
                 [value]="switchStatus(task.status)"
                 [severity]="getSeverity(task.status)"
               />
             </td>
-            <td>{{ task.project }}</td>
+            <td>{{ task.project.name }}</td>
+            <td>{{ task.priority }}</td>
           </tr>
         </ng-template>
       </p-table>

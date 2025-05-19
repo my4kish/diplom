@@ -20,13 +20,17 @@
     <div class="flex gap-2">
       <div class="flex align-items-center">
         <i class="pi pi-comment"></i>
-        <p class="my-0 mx-1">5</p>
+        <p class="my-0 mx-1">
+          {{(item.comments || []).length}}
+        </p>
       </div>
       <div class="flex align-items-center">
         <i class="pi pi-paperclip"></i>
-        <p class="my-0 mx-1">3</p>
+        <p class="my-0 mx-1">
+          {{item.imgUrls.length}}
+        </p>
       </div>
     </div>
   </div>
-  <p class="mb-0 mt-2 text-500 text-xs">Құрылды: 20 май, 2025</p>
+  <p class="mb-0 mt-2 text-500 text-xs">Құрылды: {{ item.createdAt }} </p>
 </p-card>

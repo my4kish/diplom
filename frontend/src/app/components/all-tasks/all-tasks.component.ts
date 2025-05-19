@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { Severity } from '../../interfaces/severity';
 import { RouterLink } from '@angular/router';
@@ -9,6 +9,8 @@ import { PanelModule } from 'primeng/panel';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonModule } from '@angular/common';
+import { TaskService } from '../../services/task.service';
+import { Task, TaskStatus } from '../../interfaces/models/task.model';
 
 @Component({
   selector: 'app-all-tasks',
@@ -29,44 +31,17 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllTasksComponent {
-  tasks = [
-    {
-      name: 'Сделать отчёт',
-      status: 'in_progress',
-      project: 'CRM система',
-      assignee: ['Айгүл', 'Анау', 'Мынау'],
-    },
-    {
-      name: 'Починить баг',
-      status: 'completed',
-      project: 'Сайт компании',
-      assignee: ['Нурлан', 'Анау'],
-    },
-    {
-      name: 'Добавить фильтры',
-      status: 'new',
-      project: 'Панель администратора',
-      assignee: ['Данияр', 'Анау', 'Мынау'],
-    },
-    {
-      name: 'что то просроченное',
-      status: 'overdue',
-      project: 'project',
-      assignee: ['aaaa', 'Анау'],
-    },
-    {
-      name: 'что то просроченное',
-      status: 'overdue',
-      project: 'project',
-      assignee: ['aaaa', 'Анау', 'Мынау', 'Мыны'],
-    },
-    {
-      name: 'что то просроченное',
-      status: 'overdue',
-      project: 'project',
-      assignee: ['aaaa', 'Анау', 'Мынау'],
-    },
-  ];
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly tasksService = inject(TaskService);
+  tasks: Task[] = [];
+
+  constructor() {
+    this.tasksService.loadTasks();
+    this.tasksService.findByUser().subscribe((list) => {
+      this.tasks = list;
+      this.cdr.markForCheck();
+    });
+  }
 
   public getSeverity(status: string): Severity {
     switch (status) {
@@ -98,22 +73,37 @@ export class AllTasksComponent {
     }
   }
 
-  public cycleStatus(task: any): void {
-    if (task.status === 'overdue') return;
-
-    switch (task.status) {
-      case 'new':
-        task.status = 'in_progress';
-        break;
-      case 'in_progress':
-        task.status = 'completed';
-        break;
-      case 'completed':
-        task.status = 'in_progress';
-        break;
+  private getNextStatus(status: TaskStatus): TaskStatus {
+    switch (status) {
+      case TaskStatus.New:
+        return TaskStatus.InProgress;
+      case TaskStatus.InProgress:
+        return TaskStatus.Completed;
+      case TaskStatus.Completed:
+        return TaskStatus.InProgress;
       default:
-        task.status = 'new';
-        break;
+        return status; // overdue остаётся overdue
     }
+  }
+
+  /** Меняем статус и пушим на бэкенд */
+  public cycleStatus(task: Task): void {
+    if (task.status === TaskStatus.Overdue) {
+      return; // ничего не делаем, если уже просрочено
+    }
+
+    if (task.status === undefined) {
+      console.error('Task status is undefined');
+      return;
+    }
+    const newStatus = this.getNextStatus(task.status);
+    task.status = newStatus;
+    this.tasksService
+      .updateTask(task.id, { status: newStatus })
+      .subscribe({
+        error: err => {
+          console.error('Не удалось сменить статус задачи', err);
+        }
+      });
   }
 }

@@ -3,16 +3,22 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Request,
   UseGuards,
+  FileTypeValidator,
+  MaxFileSizeValidator,
+  ParseFilePipe,
+  UploadedFiles,
+  UseInterceptors,
+  Put,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('tasks')
@@ -20,10 +26,24 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  create(@Request() req, @Body() createTaskDto: CreateTaskDto) {
+  @UseInterceptors(FilesInterceptor('images'))
+  async create(
+    @Body() createTaskDto: CreateTaskDto,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 5000000 }), // до 5МБ на файл
+          new FileTypeValidator({ fileType: 'image/' }),   // только изображения
+        ],
+        fileIsRequired: false,
+      }),
+    ) files: Express.Multer.File[],
+    @Request() req,
+  ) {
     const userId = req.user.userId;
-    return this.taskService.create({ ...createTaskDto, assignedToId: userId });
+    return this.taskService.create(createTaskDto, files, userId);
   }
+
 
   @Get()
   findAll() {
@@ -52,7 +72,7 @@ export class TaskController {
     return this.taskService.findByUserAndProject(userId, projectId);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id') id: string,
     @Body() updateTaskDto: UpdateTaskDto,

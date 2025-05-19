@@ -18,11 +18,11 @@
         id="new"
         cdkDropList
         #newList="cdkDropList"
-        [cdkDropListData]="new"
+        [cdkDropListData]="newTasks"
         [cdkDropListConnectedTo]="[inProgressList, completedList, overdueList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (item of new; track item) {
+        @for (item of newTasks; track item) {
         <div class="task-box" *ngIf="item.status === 'new'" cdkDrag>
           <app-task-card [item]="item"></app-task-card>
         </div>
