@@ -25,6 +25,7 @@ export class CreateTaskDto {
   @IsString({ each: true })
   imgUrls?: string[];
 
+  @IsUUID()
   assignedToId: string;
 
   @IsUUID()

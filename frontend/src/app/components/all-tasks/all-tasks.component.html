@@ -8,8 +8,7 @@
     </ng-template>
 
     <p-table
-      [value]="tasks"
-
+      [value]="(tasks$ | async) ?? []"
       [rowHover]="true"
       [tableStyle]="{ 'min-width': '100rem'}"
     >
@@ -24,7 +23,7 @@
       </ng-template>
 
       <ng-template pTemplate="body" let-task>
-        <tr [routerLink]="['/task', task.id]" class="cursor-pointer" >
+        <tr [routerLink]="['/task', task.id]" class="cursor-pointer">
           <td>{{ task.title }}</td>
           <td>
             <div class="flex align-items-center gap-2">
@@ -45,7 +44,7 @@
             </div>
           </td>
           <td>{{ task.project.name }}</td>
-          <td>{{ task.createdAt }}</td>
+          <td>{{ task.createdAt | date: 'medium' }}</td>
           <td>{{ task.priority }}</td>
         </tr>
       </ng-template>

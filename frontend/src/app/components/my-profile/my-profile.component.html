@@ -1,25 +1,81 @@
 <div class="m-3">
   <p-panel>
-    <form [formGroup]="userForm" (ngSubmit)="onSumbit()">
-      <div class="flex flex-wrap gap-3 align-items-center justify-content-between">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div
+        class="flex flex-wrap gap-3 align-items-center justify-content-between"
+      >
         <div class="flex flex-wrap gap-8 align-items-center">
-          <p-avatar
-            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-            class="mr-2 max-w-10rem max-h-10rem min-w-min w-full h-full"
-            size="xlarge"
-            shape="circle"
-          />
           <div class="flex flex-column">
-            <p class="m-0 text-xl font-bold">Аты жөні</p>
-            <p class="m-0 text-500">Рөлі: Admin</p>
-            <p class="m-0 text-500">Лауазымы: Менеджер</p>
+            <p-avatar
+              [image]="user.avatarUrl"
+              class="mr-2 max-w-10rem max-h-10rem min-w-min w-full h-full"
+              size="xlarge"
+              shape="circle"
+            />
+            <div class="field flex flex-column gap-2 align-items-center">
+              <input
+                #fileInput
+                type="file"
+                (change)="onFileSelect($event)"
+                accept="image/*"
+                style="display: none"
+              />
+              <!-- это ваша кастом-кнопка, её можно стилизовать как угодно -->
+              <button
+                pButton
+                type="button"
+                severity="contrast"
+                icon="pi pi-upload"
+                (click)="fileInput.click()"
+                [disabled]="!userForm.invalid"
+              >
+                Аватар таңдау
+              </button>
+            </div>
+            <!-- Список выбранных файлов -->
+            <ul *ngIf="uploadedFiles.length > 0" class="file-list">
+              <li *ngFor="let file of uploadedFiles; index as i">
+                {{ file.name }}
+                <button type="button" (click)="removeFile(i)">×</button>
+              </li>
+            </ul>
+          </div>
+          <div class="flex flex-column">
+            <p class="m-0 text-xl font-bold">
+              {{ user.firstName }} {{ user.lastName }}
+            </p>
+            <p class="m-0 text-500">Рөлі: {{ user.role }}</p>
+            <p class="m-0 text-500" *ngIf="!isEditing">Лауазымы: {{ user.position }}</p>
+            <div class="flex flex-wrap align-items-center gap-2" *ngIf="isEditing">
+              <label for="name">Лауазымы:</label>
+              <input
+                formControlName="position"
+                pInputText
+                id="position"
+                class="w-20rem"
+              />
+            </div>
           </div>
         </div>
 
         <div class="width-45 flex justify-content-center flex-wrap my-5 gap-3">
           <div class="flex flex-column">
-            <label for="name">Толық аты</label>
-            <input formControlName="name" pInputText id="name" class="w-20rem"/>
+            <label for="name">Аты</label>
+            <input
+              formControlName="firstName"
+              pInputText
+              id="name"
+              class="w-20rem"
+            />
+          </div>
+          <div class="flex flex-column">
+            <label for="name">Жөні</label>
+            <input
+              formControlName="lastName"
+              pInputText
+              id="name"
+              class="w-20rem"
+            />
           </div>
           <div class="flex flex-column">
             <label for="email">Email</label>
@@ -41,21 +97,32 @@
             />
           </div>
           <div class="flex flex-column">
-            <label for="city">Қала</label>
-            <p-select
+            <label for="name">Қала</label>
+            <input
               formControlName="city"
-              [options]="cities"
-              placeholder="Выберите город"
-              class="w-13rem"
+              pInputText
+              id="city"
+              class="w-20rem"
             />
           </div>
           <div class="flex flex-column">
             <label for="birthday">Телефон нөмірі</label>
             <p-inputmask
               formControlName="phone"
-              mask="+7(999) 999-9999"
-              placeholder="+7(707) 000-0000"
+              mask="+7(999)999-9999"
+              placeholder="+7(707)000-0000"
             />
+          </div>
+          <div class="flex flex-column">
+            <label class="font-semibold">Мен туралы</label>
+            <small>(1000 таңбадан аспауы керек)</small>
+            <textarea
+              pTextarea
+              formControlName="aboutMe"
+              rows="5"
+              cols="60"
+              maxlength="1000"
+            ></textarea>
           </div>
         </div>
 

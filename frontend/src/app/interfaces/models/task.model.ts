@@ -1,3 +1,4 @@
+import { taskComment } from "./comment.model";
 import { Project } from "./project.model";
 import { User } from "./user.model";
 
@@ -7,13 +8,13 @@ export interface Task {
   description?: string;
   status?: TaskStatus;
   priority: Priority;
-  dueDate?: string;
+  dueDate?: Date;
   imgUrls: string[];
   assignedTo: User;
   assignedToId: string;
   project: Project;
   projectId: string;
-  comments: Comment[];
+  comments: taskComment[];
   createdAt: string;
   updatedAt: string;
 }

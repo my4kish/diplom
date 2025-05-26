@@ -1,22 +1,34 @@
-<p class="text-2xl text-900 font-bold">Пікірлер</p>
-<form>
-  <div class="flex flex-column gap-3 max-w-min">
-    <textarea
-      rows="3"
-      cols="100"
-      pTextarea
-      [autoResize]="true"
-      variant="filled"
-      class="max-w-min"
-    ></textarea>
-    <div class="flex justify-content-end gap-3">
-      <p-button severity="info" label="Пікір қалдыру"></p-button>
+<!-- src/app/components/tasks/task-comments-list/task-comments-list.component.html -->
+<p-panel header="Пікірлер">
+  <ng-container *ngIf="comments$ | async as comments; else noComments">
+    <div class="flex flex-column gap-2">
+      <app-task-comment-card
+        *ngFor="let c of comments; trackBy: trackById"
+        [comment]="c"
+      ></app-task-comment-card>
     </div>
+  </ng-container>
+  <ng-template #noComments>
+    <p class="p-m-2">Пікірлер жоқ.</p>
+  </ng-template>
+
+  <div class="p-fluid mt-4 flex flex-column gap-1">
+    <label for="newComment" class="font-bold mb-1">Жаңа пікір</label>
+    <textarea
+      pTextarea
+      id="newComment"
+      rows="3"
+      [(ngModel)]="newComment"
+      placeholder="Пікіріңізді жазыңыз..."
+      class="p-inputtext p-component w-full"
+    ></textarea>
+    <button
+      pButton
+      type="button"
+      label="Жіберу"
+      class="mt-2"
+      (click)="addComment()"
+      [disabled]="!newComment.trim()"
+    ></button>
   </div>
-</form>
-<p-divider></p-divider>
-<app-task-comment-card></app-task-comment-card>
-<app-task-comment-card></app-task-comment-card>
-<app-task-comment-card></app-task-comment-card>
-<app-task-comment-card></app-task-comment-card>
-<app-task-comment-card></app-task-comment-card>
+</p-panel>

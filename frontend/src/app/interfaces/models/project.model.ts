@@ -1,4 +1,4 @@
-import { Task } from '../tasks';
+import { Task } from './task.model';
 import { User } from './user.model';
 
 export interface Project {
@@ -23,4 +23,10 @@ export enum ProjectStatus {
 export interface createProjectDTO {
   name: string;
   description?: string;
+}
+
+export class UpdateProjectDto {
+  name?: string;
+  description?: string;
+  status?: ProjectStatus; // 'active' | 'paused' | 'completed' | 'archived'
 }

@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Severity } from '../../interfaces/severity';
 import { RouterLink } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -9,11 +8,15 @@ import { PanelModule } from 'primeng/panel';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonModule } from '@angular/common';
+
 import { TaskService } from '../../services/task.service';
 import { Task, TaskStatus } from '../../interfaces/models/task.model';
+import { Severity } from '../../interfaces/severity';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-all-tasks',
+  standalone: true,
   imports: [
     CommonModule,
     CardModule,
@@ -30,17 +33,16 @@ import { Task, TaskStatus } from '../../interfaces/models/task.model';
   styleUrl: './all-tasks.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AllTasksComponent {
-  private readonly cdr = inject(ChangeDetectorRef);
+export class AllTasksComponent implements OnInit {
   private readonly tasksService = inject(TaskService);
-  tasks: Task[] = [];
+  tasks$: Observable<Task[]>;
 
   constructor() {
-    this.tasksService.loadTasks();
-    this.tasksService.findByUser().subscribe((list) => {
-      this.tasks = list;
-      this.cdr.markForCheck();
-    });
+    this.tasks$ = this.tasksService.findByUser();
+  }
+
+  ngOnInit(): void {
+    this.tasksService.loadTasks(); // если нужно глобальное хранилище
   }
 
   public getSeverity(status: string): Severity {
@@ -82,11 +84,10 @@ export class AllTasksComponent {
       case TaskStatus.Completed:
         return TaskStatus.InProgress;
       default:
-        return status; // overdue остаётся overdue
+        return status;
     }
   }
 
-  /** Меняем статус и пушим на бэкенд */
   public cycleStatus(task: Task): void {
     if (task.status === TaskStatus.Overdue) {
       return; // ничего не делаем, если уже просрочено

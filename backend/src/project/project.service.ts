@@ -1,3 +1,4 @@
+// src/projects/project.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -7,53 +8,55 @@ import {
 import { PrismaService } from '../prisma.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { ProjectStatus } from '@prisma/client'; // Пример для enum, если ProjectStatus используется в Prisma
+import { ProjectStatus } from '@prisma/client';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
-  // Создание нового проекта
+  /** Создание нового проекта и уведомление участников */
   async createProject(createProjectDto: CreateProjectDto, userId: string) {
-    const { name, description, memberIds } = createProjectDto;
+    const { name, description, memberIds = [] } = createProjectDto;
+
+    // Создаём уникальный список участников + создатель
+    const uniqueMemberIds = Array.from(new Set([...memberIds, userId]));
 
     const data: any = {
       name,
       description,
       status: ProjectStatus.active,
       createdById: userId,
+      members: {
+        connect: uniqueMemberIds.map((id) => ({ id })),
+      },
     };
 
-    if (memberIds?.length) {
-      data.members = {
-        connect: memberIds.map((id) => ({ id })),
-      };
-    }
-
-    return this.prisma.project.create({ data });
-  }
-
-  // Получение проекта по ID
-  async getProjectById(projectId: string) {
-    const project = await this.prisma.project.findUnique({
-      where: { id: projectId },
-      include: {
-        members: true,
-        tasks: true,
-        createdBy: true,
-      },
+    const project = await this.prisma.project.create({
+      data,
+      include: { members: true },
     });
 
-    if (!project) {
-      throw new NotFoundException('Project not found');
+    // Уведомляем всех участников
+    for (const m of project.members) {
+      await this.notificationService.notifyUser(
+        m.id,
+        'project',
+        `Вас добавили в проект "${project.name}"`,
+      );
     }
 
     return project;
   }
 
-  // Получение всех проектов
-  async getAllProjects() {
+  async getUserProjects(userId: string) {
     return this.prisma.project.findMany({
+      where: {
+        OR: [{ createdById: userId }, { members: { some: { id: userId } } }],
+      },
       include: {
         members: true,
         tasks: true,
@@ -62,141 +65,155 @@ export class ProjectService {
     });
   }
 
-  // Обновление данных проекта
+  /** Получение проекта по ID */
+  async getProjectById(projectId: string) {
+    const project = await this.prisma.project.findUnique({
+      where: { id: projectId },
+      include: { members: true, tasks: true, createdBy: true },
+    });
+    if (!project) throw new NotFoundException('Project not found');
+    return project;
+  }
+
+  /** Получение всех проектов */
+  async getAllProjects() {
+    return this.prisma.project.findMany({
+      include: { members: true, tasks: true, createdBy: true },
+    });
+  }
+
+  /** Обновление данных проекта + уведомление участников */
   async updateProject(
     projectId: string,
     updateProjectDto: UpdateProjectDto,
     userId: string,
   ) {
-    const existingProject = await this.prisma.project.findUnique({
+    const existing = await this.prisma.project.findUnique({
       where: { id: projectId },
     });
-
-    if (!existingProject) {
-      throw new NotFoundException('Project not found');
-    }
-
-    // Проверяем, является ли пользователь создателем проекта
-    if (existingProject.createdById !== userId) {
+    if (!existing) throw new NotFoundException('Project not found');
+    if (existing.createdById !== userId) {
       throw new ForbiddenException(
         'You are not allowed to update this project',
       );
     }
 
-    // Данные для обновления
-    const projectData: any = {
-      ...updateProjectDto,
-    };
-
-    // Если передан массив membersIds, обновляем участников
+    const projectData: any = { ...updateProjectDto };
     if (updateProjectDto.memberIds) {
       projectData.members = {
         connect: updateProjectDto.memberIds.map((id) => ({ id })),
       };
     }
 
-    // Обновляем проект
-    const updatedProject = await this.prisma.project.update({
+    const updated = await this.prisma.project.update({
       where: { id: projectId },
       data: projectData,
+      include: { members: true },
     });
 
-    return updatedProject;
+    // Уведомляем всех участников, что проект изменён
+    for (const m of updated.members) {
+      await this.notificationService.notifyUser(
+        m.id,
+        'project',
+        `Проект "${updated.name}" был обновлён`,
+      );
+    }
+
+    return updated;
   }
 
-  // Удаление проекта
+  /** Удаление проекта */
   async deleteProject(projectId: string, userId: string) {
     const project = await this.prisma.project.findUnique({
       where: { id: projectId },
+      include: { members: true },
     });
-
-    if (!project) {
-      throw new NotFoundException('Project not found');
-    }
-
-    // Проверяем, является ли пользователь создателем проекта
+    if (!project) throw new NotFoundException('Project not found');
     if (project.createdById !== userId) {
       throw new ForbiddenException(
         'You are not allowed to delete this project',
       );
     }
 
-    // Удаляем проект
-    await this.prisma.project.delete({
-      where: { id: projectId },
-    });
+    // Уведомляем участников о том, что проект удалён
+    for (const m of project.members) {
+      await this.notificationService.notifyUser(
+        m.id,
+        'project',
+        `Проект "${project.name}" был удалён`,
+      );
+    }
 
+    await this.prisma.project.delete({ where: { id: projectId } });
     return { message: 'Project successfully deleted' };
   }
 
-  // Добавление участников в проект
-  async addMembersToProject(projectId: string, membersIds: string[]) {
+  /** Добавление участников в проект + уведомление новых */
+  async addMembersToProject(projectId: string, memberIds: string[]) {
     const project = await this.prisma.project.findUnique({
       where: { id: projectId },
       include: { members: true },
     });
+    if (!project) throw new NotFoundException('Project not found');
 
-    if (!project) {
-      throw new NotFoundException('Project not found');
-    }
-
-    // ID уже добавленных участников
-    const existingMemberIds = project.members.map((m) => m.id);
-
-    // Фильтрация: только те ID, которых ещё нет
-    const newMemberIds = membersIds.filter(
-      (id) => !existingMemberIds.includes(id),
-    );
-
-    if (newMemberIds.length === 0) {
+    const existingIds = project.members.map((m) => m.id);
+    const newIds = memberIds.filter((id) => !existingIds.includes(id));
+    if (!newIds.length) {
       throw new BadRequestException(
         'All users are already members of this project',
       );
     }
 
-    // Проверка, существуют ли эти пользователи
+    // Проверка существования
     const validUsers = await this.prisma.user.findMany({
-      where: { id: { in: newMemberIds } },
+      where: { id: { in: newIds } },
     });
-
-    if (validUsers.length !== newMemberIds.length) {
+    if (validUsers.length !== newIds.length) {
       throw new BadRequestException('One or more users not found');
     }
 
-    // Добавление новых участников
-    return this.prisma.project.update({
+    const updated = await this.prisma.project.update({
       where: { id: projectId },
-      data: {
-        members: {
-          connect: newMemberIds.map((id) => ({ id })),
-        },
-      },
-      include: {
-        members: true,
-      },
+      data: { members: { connect: newIds.map((id) => ({ id })) } },
+      include: { members: true },
     });
+
+    // Уведомляем только новых участников
+    for (const id of newIds) {
+      await this.notificationService.notifyUser(
+        id,
+        'project',
+        `Вас добавили в проект "${project.name}"`,
+      );
+    }
+
+    return updated;
   }
 
-  // Удаление участников из проекта
-  async removeMembersFromProject(projectId: string, membersIds: string[]) {
+  /** Удаление участников из проекта + уведомление удалённых */
+  async removeMembersFromProject(projectId: string, memberIds: string[]) {
     const project = await this.prisma.project.findUnique({
       where: { id: projectId },
     });
-
-    if (!project) {
-      throw new NotFoundException('Project not found');
-    }
+    if (!project) throw new NotFoundException('Project not found');
 
     // Отключаем участников
-    const updatedProject = await this.prisma.project.update({
+    const updated = await this.prisma.project.update({
       where: { id: projectId },
-      data: {
-        members: {
-          disconnect: membersIds.map((id) => ({ id })),
-        },
-      },
+      data: { members: { disconnect: memberIds.map((id) => ({ id })) } },
+      include: { members: true },
     });
 
-    return updatedProject;
+    // Уведомляем удалённых участников
+    for (const id of memberIds) {
+      await this.notificationService.notifyUser(
+        id,
+        'project',
+        `Вас удалили из проекта "${project.name}"`,
+      );
+    }
+
+    return updated;
   }
 }

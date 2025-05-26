@@ -24,16 +24,18 @@ export class AuthService {
 
   public login(user: UserLoginInterface) {
     return this.http
-      .post<{ access_token: string }>(`${this.baseApiUrl}login`, user)
+      .post<{ access_token: string, role: string }>(`${this.baseApiUrl}login`, user)
       .subscribe((r) => {
         console.log('respone login', r);
         localStorage.setItem('access_token', r.access_token);
+        localStorage.setItem('role', r.role);
         this.router.navigate([''])
       });
   }
 
   public logout() {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('role');
     this.router.navigate(['/login']);
   }
 }

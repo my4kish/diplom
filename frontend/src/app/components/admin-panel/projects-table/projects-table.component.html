@@ -1,0 +1,119 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="card">
+  <p-table
+    #dt
+    [value]="projects"
+    dataKey="id"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    [globalFilterFields]="['name', 'description', 'status']"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="{first} - {last} / {totalRecords}"
+    [rowHover]="true"
+    [(selection)]="selectedProjects"
+  >
+    <ng-template #caption>
+      <div class="flex justify-between gap-4">
+        <p-button
+          [outlined]="true"
+          icon="pi pi-filter-slash"
+          label="Тазалау"
+          (click)="clear(dt)"
+        />
+        <p-iconField iconPosition="left">
+          <p-inputIcon><i class="pi pi-search"></i></p-inputIcon>
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchValue"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Қолданушыларды іздеу..."
+          />
+        </p-iconField>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">
+          Атауы <p-sortIcon field="name" />
+          <p-columnFilter field="name" display="menu" />
+        </th>
+        <th pSortableColumn="description">
+          Сипаттамасы <p-sortIcon field="description" />
+          <p-columnFilter field="description" display="menu" />
+        </th>
+        <th pSortableColumn="status">
+          Мәртебесі <p-sortIcon field="status" />
+          <p-columnFilter field="status" display="menu" />
+        </th>
+        <th style="width: 8rem">Әрекет</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-project>
+      <tr>
+        <!-- Name -->
+        <td *ngIf="editProject?.id === project.id">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="editedName"
+            placeholder="Атауы"
+          />
+        </td>
+        <td *ngIf="editProject?.id !== project.id">
+          {{ project.name }}
+        </td>
+
+        <!-- Description -->
+        <td *ngIf="editProject?.id === project.id">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="editedDescription"
+            placeholder="Сипаттамасы"
+          />
+        </td>
+        <td *ngIf="editProject?.id !== project.id">
+          {{ project.description }}
+        </td>
+
+        <!-- Status -->
+        <td *ngIf="editProject?.id === project.id">
+          <p-dropdown
+            [options]="statusOptions"
+            [(ngModel)]="editedStatus"
+            placeholder="Мәртебесі"
+            appendTo="body"
+          />
+        </td>
+        <td *ngIf="editProject?.id !== project.id">
+          <p-tag [value]="project.status" [severity]="getStatusColor(project.status)" />
+        </td>
+
+        <!-- Actions -->
+        <td>
+          <div class="flex gap-2">
+            <ng-container *ngIf="editProject?.id === project.id; else actions">
+              <p-button icon="pi pi-check" (click)="onSave(project)" />
+              <p-button icon="pi pi-times" (click)="onCancel()" severity="danger" />
+            </ng-container>
+            <ng-template #actions>
+              <p-button icon="pi pi-pencil" (click)="onEditInit(project)" />
+              <p-button icon="pi pi-trash" (click)="confirmDelete(project)" severity="danger" />
+            </ng-template>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="4">Жобалар табылмады.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

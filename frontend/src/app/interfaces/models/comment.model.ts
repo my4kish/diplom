@@ -1,7 +1,7 @@
-import { Task } from "../tasks";
+import { Task } from "./task.model";
 import { User } from "./user.model";
 
-export interface Comment {
+export interface taskComment {
   id: string;
   task: Task;
   taskId: string;

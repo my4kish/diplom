@@ -1,46 +1,63 @@
+// src/app/layout/header/header.component.ts
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
   OnInit,
+  inject,
 } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
-import { Menu } from 'primeng/menu';
+import { MenuModule } from 'primeng/menu';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
-import { InputTextModule } from 'primeng/inputtext';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
-import { NotificationService } from '../../services/notifiaction.service';
-import { DrawerModule } from 'primeng/drawer';
+
+import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
+import { User } from '../../interfaces/models/user.model';
+import { RoleType } from '../../interfaces/models/user.model';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    Menu,
+    CommonModule,
+    MenuModule,
     BadgeModule,
     AvatarModule,
-    InputTextModule,
-    CommonModule,
     ButtonModule,
     OverlayBadgeModule,
-    DrawerModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
-  private readonly notificationService = inject(NotificationService);
-  public readonly router = inject(Router);
-  public readonly authService = inject(AuthService);
-  profileItems: MenuItem[] | undefined;
+  private notificationService = inject(NotificationService);
+  private userService = inject(UserService);
+  private authService = inject(AuthService);
+  public router = inject(Router);
 
-  ngOnInit() {
+  /** Текущий пользователь */
+  public user$: Observable<User | null> = this.userService.currentUser$;
+
+  /** Количество непрочитанных уведомлений */
+  public unreadCount$: Observable<number> =
+    this.notificationService.notifications$.pipe(
+      map((list) => list.filter((n) => !n.isRead).length)
+    );
+
+  /** Пункты меню */
+  public profileItems: MenuItem[] = [];
+
+  ngOnInit(): void {
+    this.userService.getCurrentUser().subscribe();
+    this.notificationService.loadMyNotifications();
+
     this.profileItems = [
       {
         label: 'Басты бет',
@@ -50,7 +67,6 @@ export class HeaderComponent implements OnInit {
       {
         label: 'Жобалар',
         icon: 'pi pi-folder',
-        badge: '5',
         command: () => this.router.navigate(['/projects']),
       },
       {
@@ -58,11 +74,7 @@ export class HeaderComponent implements OnInit {
         icon: 'pi pi-user',
         command: () => this.router.navigate(['/profile']),
       },
-      {
-        label: 'Шығу',
-        icon: 'pi pi-sign-out',
-        command: () => this.logout()
-      },
+      { label: 'Шығу', icon: 'pi pi-sign-out', command: () => this.logout() },
     ];
   }
 
@@ -70,18 +82,13 @@ export class HeaderComponent implements OnInit {
     this.notificationService.toggleSidebar();
   }
 
-  navigateProjects(): void {
-    this.router.navigate(['/projects']);
-  }
-
-  public toggleDarkMode(): void {
-    const element = document.querySelector('html');
-    const isDark = element!.classList.toggle('my-app-dark');
+  toggleDarkMode(): void {
+    const el = document.documentElement;
+    const isDark = el.classList.toggle('my-app-dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }
 
-  public logout() {
+  logout(): void {
     this.authService.logout();
   }
-  
 }

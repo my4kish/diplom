@@ -1,5 +1,6 @@
 <div class="kanban">
   <div class="kanban-container flex flex-wrap gap-3">
+    <!-- Новые -->
     <p-panel>
       <ng-template #header>
         <div class="flex align-items-center justify-content-between w-full">
@@ -18,80 +19,80 @@
         id="new"
         cdkDropList
         #newList="cdkDropList"
-        [cdkDropListData]="newTasks"
+        [cdkDropListData]="newTasks()"
         [cdkDropListConnectedTo]="[inProgressList, completedList, overdueList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (item of newTasks; track item) {
-        <div class="task-box" *ngIf="item.status === 'new'" cdkDrag>
-          <app-task-card [item]="item"></app-task-card>
-        </div>
+        @for (item of newTasks(); track item.id) {
+          <div class="task-box" cdkDrag>
+            <app-task-card [item]="item"></app-task-card>
+          </div>
         }
       </div>
     </p-panel>
+
+    <!-- В работе -->
     <p-panel>
       <ng-template #header>
-        <div class="flex align-items-center justify-content-between w-full">
-          <p class="text-900 m-0 font-bold">Жұмыс барысында</p>
-        </div>
+        <p class="text-900 m-0 font-bold">Жұмыс барысында</p>
       </ng-template>
       <div
         class="kanban-column"
         id="in_progress"
         cdkDropList
         #inProgressList="cdkDropList"
-        [cdkDropListData]="inProgress"
+        [cdkDropListData]="inProgress()"
         [cdkDropListConnectedTo]="[newList, completedList, overdueList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (item of inProgress; track item) {
-        <div class="task-box" *ngIf="item.status === 'in_progress'" cdkDrag>
-          <app-task-card [item]="item"></app-task-card>
-        </div>
+        @for (item of inProgress(); track item.id) {
+          <div class="task-box" cdkDrag>
+            <app-task-card [item]="item"></app-task-card>
+          </div>
         }
       </div>
     </p-panel>
+
+    <!-- Завершенные -->
     <p-panel>
       <ng-template #header>
-        <div class="flex align-items-center justify-content-between w-full">
-          <p class="text-900 m-0 font-bold">Орындалды</p>
-        </div>
+        <p class="text-900 m-0 font-bold">Орындалды</p>
       </ng-template>
       <div
         class="kanban-column"
         id="completed"
         cdkDropList
         #completedList="cdkDropList"
-        [cdkDropListData]="completed"
+        [cdkDropListData]="completed()"
         [cdkDropListConnectedTo]="[newList, inProgressList, overdueList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (item of completed; track item) {
-        <div class="task-box" *ngIf="item.status === 'completed'" cdkDrag>
-          <app-task-card [item]="item"></app-task-card>
-        </div>
+        @for (item of completed(); track item.id) {
+          <div class="task-box" cdkDrag>
+            <app-task-card [item]="item"></app-task-card>
+          </div>
         }
       </div>
     </p-panel>
+
+    <!-- Просроченные -->
     <p-panel>
       <ng-template #header>
-        <div class="flex align-items-center justify-content-between w-full">
-          <p class="text-900 m-0 font-bold">Мерзімі өтті</p>
-        </div>
+        <p class="text-900 m-0 font-bold">Мерзімі өтті</p>
       </ng-template>
       <div
         class="kanban-column"
         id="overdue"
         cdkDropList
         #overdueList="cdkDropList"
-        [cdkDropListData]="overdue"
+        [cdkDropListData]="overdue()"
         [cdkDropListConnectedTo]="[newList, inProgressList, completedList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (item of overdue; track item) {
-        <div class="task-box" *ngIf="item.status === 'overdue'" cdkDrag>
-          <app-task-card [item]="item"></app-task-card>
-        </div>
+        @for (item of overdue(); track item.id) {
+          <div class="task-box" cdkDrag>
+            <app-task-card [item]="item"></app-task-card>
+          </div>
         }
       </div>
     </p-panel>

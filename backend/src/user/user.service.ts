@@ -1,3 +1,4 @@
+// src/users/user.service.ts
 import {
   ConflictException,
   Injectable,
@@ -6,19 +7,41 @@ import {
 import { PrismaService } from '../prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FileService } from 'src/file.service';
+import { FileService } from '../file.service';
+import { RoleType } from '@prisma/client';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly fileService: FileService,
+    private readonly notificationService: NotificationService,
   ) {}
 
+  /**
+   * Создаёт нового пользователя и уведомляет супер-админов
+   */
   async create(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({
+    // создаём пользователя
+    const newUser = await this.prisma.user.create({
       data: createUserDto,
     });
+
+    // уведомляем всех superadmin-ов о новой регистрации
+    const superAdmins = await this.prisma.user.findMany({
+      where: { role: RoleType.superadmin },
+      select: { id: true },
+    });
+    for (const admin of superAdmins) {
+      await this.notificationService.notifyUser(
+        admin.id,
+        'user',
+        `Новый пользователь зарегистрирован: ${newUser.firstName} ${newUser.lastName}`,
+      );
+    }
+
+    return newUser;
   }
 
   async findAll() {
@@ -52,6 +75,22 @@ export class UserService {
     });
   }
 
+  async updateData(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.getCurrentUser(id);
+
+    if (updateUserDto.email) {
+      const userByEmail = await this.findOneByEmail(updateUserDto.email);
+      if (userByEmail && userByEmail.id !== user.id) {
+        throw new ConflictException('User with this email already exists');
+      }
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
+  }
+
   async update(
     id: string,
     updateUserDto: UpdateUserDto,
@@ -61,50 +100,43 @@ export class UserService {
 
     if (updateUserDto.email) {
       const userByEmail = await this.findOneByEmail(updateUserDto.email);
-
-      if (userByEmail) {
-        throw new ConflictException('User with this email is already exists');
+      if (userByEmail.id !== user.id) {
+        throw new ConflictException('User with this email already exists');
       }
     }
 
-    let uniqueAvatarKey: string = user.avatarUrl;
-
+    let avatarKey = user.avatarUrl;
     if (file) {
-      uniqueAvatarKey = `${Math.random()}-${file.originalname}`;
-
-      await this.fileService.upload(uniqueAvatarKey, file.buffer);
-
-      if(user.avatarUrl) {
-        await this.fileService.delete(user.avatarUrl)
+      if (user.avatarUrl) {
+        const prevKey = user.avatarUrl.split('/').pop();
+        await this.fileService.delete(prevKey);
       }
+      avatarKey = `${Date.now()}-${file.originalname}`;
+      await this.fileService.upload(avatarKey, file.buffer);
     }
 
-    const updatedUser = await this.prisma.user.update({
+    const updated = await this.prisma.user.update({
       where: { id },
       data: {
         ...updateUserDto,
-        avatarUrl: `https://arlan-diplom-bucket.s3.eu-north-1.amazonaws.com/${uniqueAvatarKey}`,
+        avatarUrl: `https://arlan-diplom-bucket.s3.eu-north-1.amazonaws.com/${avatarKey}`,
       },
     });
 
-    return updatedUser;
+    return updated;
   }
 
   async remove(id: string) {
-    return this.prisma.user.delete({
-      where: { id },
-    });
+    return this.prisma.user.delete({ where: { id } });
   }
 
   async getCurrentUser(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
-
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
     return user;
   }
 }

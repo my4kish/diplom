@@ -1,0 +1,167 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="card">
+  <p-table
+    #dt
+    [value]="tasks"
+    dataKey="id"
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10, 20,]"
+    [globalFilterFields]="['title', 'description', 'status', 'priority']"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="{first} - {last} / {totalRecords}"
+    [rowHover]="true"
+    [(selection)]="selectedTasks"
+  >
+    <ng-template #caption>
+      <div class="flex justify-between gap-4">
+        <p-button
+          [outlined]="true"
+          icon="pi pi-filter-slash"
+          label="Тазалау"
+          (click)="clear(dt)"
+        />
+        <p-iconField iconPosition="left">
+          <p-inputIcon>
+            <i class="pi pi-search"></i>
+          </p-inputIcon>
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchValue"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Тапсырмаларды іздеу..."
+          />
+        </p-iconField>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="title">
+          Тақырып <p-sortIcon field="title" />
+          <p-columnFilter field="title" display="menu" />
+        </th>
+        <th pSortableColumn="description">
+          Сипаттамасы <p-sortIcon field="description" />
+          <p-columnFilter field="description" display="menu" />
+        </th>
+        <th pSortableColumn="status">
+          Мәртебесі <p-sortIcon field="status" />
+          <p-columnFilter field="status" display="menu" />
+        </th>
+        <th pSortableColumn="priority">
+          Басымдық <p-sortIcon field="priority" />
+          <p-columnFilter field="priority" display="menu" />
+        </th>
+        <th pSortableColumn="dueDate">
+          Аяқталу күні
+          <p-sortIcon field="dueDate" />
+          <p-columnFilter field="dueDate" display="menu" type="date" />
+        </th>
+        <th style="width: 8rem">Әрекет</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-task>
+      <tr>
+        <!-- Title -->
+        <td *ngIf="editTask?.id === task.id">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="editedTitle"
+            placeholder="Тақырып"
+          />
+        </td>
+        <td *ngIf="editTask?.id !== task.id">{{ task.title }}</td>
+
+        <!-- Description -->
+        <td *ngIf="editTask?.id === task.id">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="editedDescription"
+            placeholder="Сипаттамасы"
+          />
+        </td>
+        <td *ngIf="editTask?.id !== task.id">{{ task.description }}</td>
+
+        <!-- Status -->
+        <td *ngIf="editTask?.id === task.id">
+          <p-dropdown
+            [options]="statusOptions"
+            [(ngModel)]="editedStatus"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Мәртебесі"
+            appendTo="body"
+          />
+        </td>
+        <td *ngIf="editTask?.id !== task.id">
+          <p-tag
+            [value]="getStatusLabel(task.status)"
+            [severity]="getStatusColor(task.status)"
+          />
+        </td>
+
+        <!-- Priority -->
+        <td *ngIf="editTask?.id === task.id">
+          <p-dropdown
+            [options]="priorityOptions"
+            [(ngModel)]="editedPriority"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Басымдық"
+            appendTo="body"
+          />
+        </td>
+        <td *ngIf="editTask?.id !== task.id">
+          {{ task.priority }}
+        </td>
+
+        <!-- Due Date -->
+        <td *ngIf="editTask?.id === task.id">
+          <p-calendar
+            [(ngModel)]="editedDueDate"
+            dateFormat="dd.mm.yy"
+            showIcon
+            appendTo="body"
+          />
+        </td>
+        <td *ngIf="editTask?.id !== task.id">
+          {{ task.dueDate ? (task.dueDate | date : "dd.MM.yyyy") : "-" }}
+        </td>
+
+        <!-- Actions -->
+        <td>
+          <div class="flex gap-2">
+            <ng-container *ngIf="editTask?.id === task.id; else defaultActions">
+              <p-button icon="pi pi-check" (click)="onSave(task)" />
+              <p-button
+                icon="pi pi-times"
+                (click)="onCancel()"
+                severity="danger"
+              />
+            </ng-container>
+            <ng-template #defaultActions>
+              <p-button icon="pi pi-pencil" (click)="onEditInit(task)" />
+              <p-button
+                icon="pi pi-trash"
+                (click)="confirmDelete(task)"
+                severity="danger"
+              />
+            </ng-template>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="5">Тапсырмалар табылмады.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

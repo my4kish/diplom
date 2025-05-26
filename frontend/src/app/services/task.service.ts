@@ -1,10 +1,10 @@
 // src/app/services/task.service.ts
-import { Injectable } from "@angular/core";
-import { ApiService } from "./api.service";
-import { Task } from "../interfaces/models/task.model";
-import { BehaviorSubject, Observable } from "rxjs";
-import { tap } from "rxjs/operators";
-import { HttpParams } from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { ApiService } from './api.service';
+import { Task } from '../interfaces/models/task.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService extends ApiService<Task> {
@@ -21,15 +21,14 @@ export class TaskService extends ApiService<Task> {
    * и положить их в локальный стейт
    */
   loadTasks(params?: HttpParams): void {
-    this.getAll(params)
-      .subscribe(tasks => this.tasksSubject.next(tasks));
+    this.getAll(params).subscribe((tasks) => this.tasksSubject.next(tasks));
   }
 
   /**
    * Получить одну задачу из текущего стейта (без HTTP-запроса)
    */
   getTaskFromState(id: string): Task | undefined {
-    return this.tasksSubject.value.find(t => t.id === id);
+    return this.tasksSubject.value.find((t) => t.id === id);
   }
 
   /**
@@ -38,7 +37,7 @@ export class TaskService extends ApiService<Task> {
    */
   createTask(data: Partial<Task>): Observable<Task> {
     return this.create(data).pipe(
-      tap(newTask => {
+      tap((newTask) => {
         const current = this.tasksSubject.value;
         this.tasksSubject.next([...current, newTask]);
       })
@@ -51,8 +50,8 @@ export class TaskService extends ApiService<Task> {
    */
   updateTask(id: string, data: Partial<Task>): Observable<Task> {
     return this.update(id, data).pipe(
-      tap(updated => {
-        const updatedList = this.tasksSubject.value.map(t =>
+      tap((updated) => {
+        const updatedList = this.tasksSubject.value.map((t) =>
           t.id === id ? updated : t
         );
         this.tasksSubject.next(updatedList);
@@ -67,17 +66,28 @@ export class TaskService extends ApiService<Task> {
   deleteTask(id: string): Observable<void> {
     return this.delete(id).pipe(
       tap(() => {
-        const filtered = this.tasksSubject.value.filter(t => t.id !== id);
+        const filtered = this.tasksSubject.value.filter((t) => t.id !== id);
         this.tasksSubject.next(filtered);
       })
     );
   }
 
   findByUser(): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.apiUrl}/${this.path}/my`)
+    return this.http.get<Task[]>(`${this.apiUrl}/${this.path}/my`);
   }
 
   findByProject(projectId: string): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.apiUrl}/${this.path}/project/${projectId}`)
+    return this.http.get<Task[]>(
+      `${this.apiUrl}/${this.path}/project/${projectId}`
+    );
+  }
+
+  createTaskWithFiles(data: FormData): Observable<Task> {
+    return this.http.post<Task>(`${this.apiUrl}/${this.path}`, data).pipe(
+      tap((newTask) => {
+        const current = this.tasksSubject.value;
+        this.tasksSubject.next([...current, newTask]);
+      })
+    );
   }
 }

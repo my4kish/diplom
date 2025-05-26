@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -14,6 +13,7 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -47,7 +47,12 @@ export class UserController {
     return this.userService.findOne(id); // ⬅️ без +
   }
 
-  @Patch(':id')
+  @Put(':id/data')
+  updateData(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.updateData(id, updateUserDto);
+  }
+
+  @Put(':id')
   @UseInterceptors(FileInterceptor('avatar'))
   update(
     @Param('id') id: string,
@@ -55,12 +60,13 @@ export class UserController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({maxSize: 1000000}),
-          new FileTypeValidator({fileType: "image/"})
+          new MaxFileSizeValidator({ maxSize: 1000000 }),
+          new FileTypeValidator({ fileType: 'image/' }),
         ],
-        fileIsRequired: false
-      })
-    ) file: Express.Multer.File,
+        fileIsRequired: false,
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     return this.userService.update(id, updateUserDto, file);
   }

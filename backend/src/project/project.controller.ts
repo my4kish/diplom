@@ -26,6 +26,13 @@ export class ProjectController {
     return this.projectService.getAllProjects();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('my')
+  getMyProjects(@Request() req) {
+    const userId = req.user.userId;
+    return this.projectService.getUserProjects(userId);
+  }
+
   // Получение проекта по ID
   @Get(':id')
   async getProjectById(@Param('id', ParseUUIDPipe) projectId: string) {
@@ -50,7 +57,11 @@ export class ProjectController {
     @Request() req, // Для получения userId из токена
   ) {
     const userId = req.user.userId;
-    return this.projectService.updateProject(projectId, updateProjectDto, userId);
+    return this.projectService.updateProject(
+      projectId,
+      updateProjectDto,
+      userId,
+    );
   }
 
   // Удаление проекта

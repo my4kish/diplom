@@ -1,4 +1,11 @@
-import { IsEmail, IsOptional, IsString, MinLength, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  MinLength,
+  MaxLength,
+  Matches,
+} from 'class-validator';
 import { RoleType } from '@prisma/client';
 
 export class CreateUserDto {
@@ -28,4 +35,23 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   avatarUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  gender?: string;
+
+  @IsOptional()
+  @Matches(/^\+7\(\d{3}\)\d{3}-\d{4}$/, {
+    message: 'Phone must be in format +7(XXX) XXX-XXXX',
+  })
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(1000)
+  aboutMe?: string;
+
+  @IsOptional()
+  @IsString()
+  city?: string;
 }

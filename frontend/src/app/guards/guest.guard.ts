@@ -1,14 +1,21 @@
-import { inject } from "@angular/core";
-import { CanActivateFn, Router } from "@angular/router";
-import { AuthService } from "../services/auth.service";
+// src/app/guards/guest.guard.ts
+import { inject } from '@angular/core';
+import {
+  CanActivateFn,
+  Router,
+  UrlTree,
+} from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-export const guestGuard: CanActivateFn = () => {
-  const authService = inject(AuthService);
+export const guestGuard: CanActivateFn = (): boolean | UrlTree => {
+  const auth   = inject(AuthService);
   const router = inject(Router);
 
-  if(authService.isAuth) {
-    router.navigate(['']);
+  // если не авторизован — доступ разрешён
+  if (!auth.isAuth) {
+    return true;
   }
-  return true;
-
-}
+  console.log('b')
+  // иначе — перенаправляем на главную
+  return router.createUrlTree(['/']);
+};

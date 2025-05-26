@@ -1,4 +1,4 @@
-import { Task } from "../tasks";
+import { Task } from "./task.model";
 import { Project } from "./project.model";
 
 export interface User {
@@ -10,6 +10,10 @@ export interface User {
   role?: RoleType;
   position?: string;
   avatarUrl?: string;
+  gender: string;
+  phone: string;
+  aboutMe: string;
+  city: string;
   projects: Project[];        // проекты, где пользователь — участник
   tasks: Task[];              // задачи, где пользователь — исполнитель
   notifications: Notification[];
@@ -20,9 +24,9 @@ export interface User {
 }
 
 export enum RoleType {
-  SuperAdmin   = 'superadmin',
-  OrgAdmin     = 'orgadmin',
-  ProjectAdmin = 'projectadmin',
-  PowerUser    = 'poweruser',
-  User         = 'user',
+  superadmin   = 'superadmin',
+  orgadmin     = 'orgadmin',
+  projectadmin = 'projectadmin',
+  poweruser    = 'poweruser',
+  user         = 'user',
 }

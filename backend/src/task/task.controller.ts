@@ -38,10 +38,8 @@ export class TaskController {
         fileIsRequired: false,
       }),
     ) files: Express.Multer.File[],
-    @Request() req,
   ) {
-    const userId = req.user.userId;
-    return this.taskService.create(createTaskDto, files, userId);
+    return this.taskService.create(createTaskDto, files);
   }
 
 

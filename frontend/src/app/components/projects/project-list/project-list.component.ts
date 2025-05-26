@@ -20,9 +20,9 @@ import { ProjectService } from '../../../services/project.service';
 })
 export class ProjectListComponent {
   private readonly projectService = inject(ProjectService);
-  public projects = this.projectService.projects$;
+  public projects$ = this.projectService.projects$;
   constructor() {
-    this.projectService.loadProjects();
+    this.projectService.loadMyProjects();
   }
 
   public onDeleteProject(id: string): void {

@@ -1,66 +1,70 @@
+<!-- src/app/components/user-profile/user-profile.component.html -->
 <div class="m-3 flex justify-content-center gap-4">
   <div class="flex flex-column gap-4">
+    <!-- Фотография и имя -->
     <p-panel [showHeader]="false">
       <div class="flex flex-wrap gap-3 align-items-center mt-4">
-        <p-avatar
-          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-          class="mr-2 max-w-10rem max-h-10rem min-w-min w-full h-full"
-          size="xlarge"
-          shape="circle"
-        />
-        <div class="flex flex-column">
-          <p class="mx-0 my-1 text-xl font-bold">Аты жөні</p>
-          <p class="mx-0 my-1 text-500">Рөлі: Admin</p>
-          <p class="mx-0 my-1 text-500">Лауазымы: Менеджер</p>
-        </div>
+        <ng-container *ngIf="user$ | async as user">
+          <p-avatar
+            [image]="user.avatarUrl"
+            class="mr-2 max-w-10rem max-h-10rem min-w-min w-full h-full"
+            size="xlarge"
+            shape="circle"
+          ></p-avatar>
+          <div class="flex flex-column">
+            <p class="mx-0 my-1 text-xl font-bold">
+              {{ user.firstName }} {{ user.lastName }}
+            </p>
+            <p class="mx-0 my-1 text-500">Рөлі: {{ user.role }}</p>
+            <p class="mx-0 my-1 text-500">Лауазымы: {{ user.position }}</p>
+          </div>
+        </ng-container>
       </div>
     </p-panel>
+
+    <!-- Общая информация -->
     <p-panel [showHeader]="false">
       <div class="mt-4">
         <p class="mx-4 my-0 text-2xl font-bold">Жалпы ақпарат</p>
-        <p class="mx-4 my-1 text-justify">Жасы: 25</p>
-        <p class="mx-4 my-1 text-justify">Қала: Караганда</p>
-        <p class="mx-4 my-1 text-justify">Жынысы: Женский</p>
+        <ng-container *ngIf="user$ | async as user">
+          <p class="mx-4 my-1 text-justify">Қала: {{ user.city }}</p>
+          <p class="mx-4 my-1 text-justify">Жынысы: {{ user.gender }}</p>
+        </ng-container>
       </div>
     </p-panel>
+
+    <!-- Контакты -->
     <p-panel [showHeader]="false">
       <div class="mt-4">
         <p class="mx-4 my-0 text-2xl font-bold">Байланыс</p>
-        <p class="mx-4 my-1 text-justify">Телефон нөмірі: +7 (708) 000 00 00</p>
-        <p class="mx-4 my-1 text-justify">Email: example&#64;mail.ru</p>
+        <ng-container *ngIf="user$ | async as user">
+          <p class="mx-4 my-1 text-justify">Телефон нөмірі: {{ user.phone }}</p>
+          <p class="mx-4 my-1 text-justify">Email: {{ user.email }}</p>
+        </ng-container>
       </div>
     </p-panel>
   </div>
+
+  <!-- Обо мне -->
   <p-panel>
     <div class="max-w-30rem">
       <p class="mx-4 my-0 text-2xl font-bold">Мен туралы</p>
-      <p class="description m-4 text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget
-        nulla commodo, euismod lectus ac, imperdiet libero. Praesent a felis
-        magna. Ut semper ultricies nisl, vitae mollis sem feugiat ut. Vivamus
-        lacinia sed tellus euismod accumsan. Fusce at lectus eros. Pellentesque
-        aliquet est non posuere hendrerit. Sed justo ante, tempus mollis orci
-        nec, auctor consequat leo. Vestibulum placerat nec elit ut ornare. Nunc
-        eleifend accumsan pellentesque. Morbi semper vestibulum risus. Quisque a
-        quam placerat, auctor risus sit amet, pellentesque nunc. Nam eleifend
-        aliquet rhoncus. Sed eu iaculis odio. Suspendisse euismod nunc a arcu
-        rhoncus, ac bibendum lorem luctus. Etiam ligula ipsum, commodo eu
-        tincidunt ac, convallis mattis eros. Aliquam euismod nunc id purus
-        pulvinar ullamcorper. Sed fringilla erat lorem. Donec sodales augue ut
-        purus consequat, ut interdum dui maximus. Praesent non dui quis tellus
-        convallis efficitur. Nunc suscipit, ipsum ut suscipit fermentum, velit
-        leo varius ipsum, et mollis arcu felis eu mi. Curabitur aliquet et
-        turpis eu suscipit. Ut vel convallis massa. In nec tellus vitae magna
-        vestibulum cursus. Nulla tempor egestas sem, sit amet ultrices dui
-        imperdiet sed. Phasellus tristique volutpat tellus, eu ullamcorper urna.
-        Fusce vitae justo volutpat, rhoncus velit eu, vestibulum quam.
-      </p>
+      <ng-container *ngIf="user$ | async as user">
+        <p class="description m-4 text-justify">{{ user.aboutMe }}</p>
+      </ng-container>
     </div>
   </p-panel>
-  <p-panel [showHeader]="false"> 
+
+  <!-- Диаграмма -->
+  <p-panel [showHeader]="false">
     <div class="mt-4">
       <p class="mx-4 mt-0 text-2xl font-bold">Тапсырмалары</p>
-      <p-chart [options]="options" [data]="data" type="doughnut" class="w-full md:w-[30rem]"/>
+      <p-chart
+        [data]="data"
+        [options]="options"
+        type="doughnut"
+        class="w-full md:w-[30rem]"
+      ></p-chart>
     </div>
   </p-panel>
 </div>

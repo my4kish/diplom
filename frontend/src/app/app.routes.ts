@@ -9,6 +9,8 @@ import { MyProfileComponent } from './components/my-profile/my-profile.component
 import { TaskDetailComponent } from './components/tasks/task-detail/task-detail.component';
 import { authGuard } from './guards/auth.guard';
 import { guestGuard } from './guards/guest.guard';
+import { roleGuard } from './guards/role.guard';
+import { RoleType } from './interfaces/models/user.model';
 
 export const routes: Routes = [
   // { path: 'login', component: LoginComponent },
@@ -53,8 +55,8 @@ export const routes: Routes = [
   //       (m) => m.AdminPanelComponent
   //     ),
   // },
-  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: '', redirectTo: 'main', pathMatch: 'full' },
   { path: 'main', component: MainComponent, canActivate: [authGuard] },
   {
@@ -100,6 +102,7 @@ export const routes: Routes = [
       import('./components/admin-panel/admin-panel.component').then(
         (m) => m.AdminPanelComponent
       ),
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [RoleType.superadmin] }
   },
 ];

@@ -1,3 +1,39 @@
-// .comment-card {
-//   --p-card-background: var(--p-surface-100) !important;
-// }
+/* src/app/components/tasks/task-comments-list/task-comment-card/task-comment-card.component.scss */
+.comment-card {
+  --p-card-background: var(--p-custom-cardcolor) !important;
+}
+
+.comment-header {
+  width: 100%;
+}
+
+.comment-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.author-info {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.sep {
+  margin: 0 0.5rem;
+  color: #cccccc;
+}
+
+.comment-date {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.comment-body {
+  padding-top: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}

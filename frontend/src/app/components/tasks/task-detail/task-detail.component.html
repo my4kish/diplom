@@ -1,83 +1,100 @@
-<div class="flex justify-content-center m-5">
-  <p-panel class="max-w-min">
-    <p class="text-4xl font-bold mt-0 text-900">Item title</p>
-    <div class="flex gap-8">
-      <div class="flex flex-column gap-2">
-        <p class="m-0 text-xl text-500">Мәртебесі</p>
-        <p-tag value="В прогрессе" severity="info" />
-      </div>
-      <div class="flex flex-column gap-2">
-        <p class="m-0 text-xl text-500">Орындаушы</p>
-        <div class="flex align-items-center gap-2">
-          <ng-container *ngIf="usersLength === 1; else moreUsers">
-            <p-avatar
-              image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-              shape="circle"
-            />
-            <p class="m-0 text-xl text-900">Имя Фамилия</p>
-          </ng-container>
-          <ng-template #moreUsers>
-            <div class="flex flex-row gap-2 align-items-start">
+<!-- src/app/components/tasks/task-detail/task-detail.component.html -->
+<ng-container *ngIf="task$ | async as task">
+  <div class="flex justify-content-center m-5">
+    <p-panel class="max-w-min w-full" [style]="{ 'max-width': '800px' }">
+      <!-- Заголовок -->
+      <p class="text-4xl font-bold mt-0 text-900">{{ task.title }}</p>
+
+      <!-- Инфо-блок -->
+      <div class="flex gap-8 mb-4">
+        <!-- Статус -->
+        <div class="flex flex-column gap-2">
+          <p class="m-0 text-xl text-500">Мәртебесі</p>
+          <p-tag
+            [value]="switchStatus(task.status!)"
+            [severity]="getSeverity(task.status!)"
+          ></p-tag>
+        </div>
+
+        <!-- Исполнитель -->
+        <div class="flex flex-column gap-2">
+          <p class="m-0 text-xl text-500">Орындаушы</p>
+          <div class="flex align-items-center gap-2">
+            <ng-container *ngIf="task.assignedTo; else noUser">
               <p-avatar
-                icon="pi pi-user"
-                [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
+                [image]="task.assignedTo.avatarUrl"
                 shape="circle"
-                size="large"
-              />
-              <p class="m-0 text-900">Аты жөні</p>
-            </div>
-          </ng-template>
+              ></p-avatar>
+              <p class="m-0 text-xl text-900">
+                {{ task.assignedTo.firstName }}
+                {{ task.assignedTo.lastName }}
+              </p>
+            </ng-container>
+            <ng-template #noUser>
+              <p-avatar icon="pi pi-user"></p-avatar>
+              <p class="m-0 text-xl text-900">—</p>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- Дата -->
+        <div class="flex flex-column gap-2">
+          <p class="m-0 text-xl text-500">Орындау мерзімі</p>
+          @if (task.dueDate) {
+          <p class="m-0 text-xl text-900">
+            {{ task.dueDate | date : "d MMM, y" }}
+          </p>
+          } @else { — }
+        </div>
+
+        <!-- Приоритет -->
+        <div class="flex flex-column gap-2">
+          <p class="m-0 text-xl text-500">Басымдық</p>
+          <p-tag
+            [value]="task.priority"
+            [severity]="
+              task.priority === Priority.High
+                ? 'danger'
+                : task.priority === Priority.Medium
+                ? 'warn'
+                : 'success'
+            "
+          ></p-tag>
         </div>
       </div>
-      <div class="flex flex-column gap-2">
-        <p class="m-0 text-xl text-500">Орындау мерзімі</p>
-        <p class="m-0 text-xl text-900">20 мая, 2025</p>
-      </div>
-      <div class="flex flex-column gap-2">
-        <p class="m-0 text-xl text-500">Басымдық</p>
-        <p-tag value="Жоғары" severity="danger" />
-      </div>
-    </div>
-    <p-divider />
-    <p class="text-2xl font-bold text-900">Сипаттамасы</p>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum. Sed ut perspiciatis unde omnis iste natus error sit
-      voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque
-      ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
-      dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-      aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui
-      ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia
-      non numquam eius modi. At vero eos et accusamus et iusto odio dignissimos
-      ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos
-      dolores et quas molestias excepturi sint occaecati cupiditate non
-      provident, similique sunt in culpa qui officia deserunt mollitia animi, id
-      est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
-      distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque
-      nihil impedit quo minus. Temporibus autem quibusdam et aut officiis
-      debitis aut rerum necessitatibus saepe eveniet ut et voluptates
-      repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
-      tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias
-      consequatur aut perferendis doloribus asperiores repellat. Donec vel
-      volutpat ipsum. Integer nunc magna, posuere ut tincidunt eget, egestas
-      vitae sapien. Morbi dapibus luctus odio.
-    </p>
-    <p-divider />
-    <p class="text-2xl font-bold text-900">Тіркемелер</p>
-    <p-galleria [value]="images" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '640px' }" [numVisible]="5">
-      <ng-template #item let-item>
-        <img class="w-30rem h-30rem" [src]="item.itemImageSrc" style="width: 100%" />
-      </ng-template>
-      <ng-template #thumbnail let-item>
-        <img class="w-5rem" [src]="item.thumbnailImageSrc" />
-      </ng-template>
-    </p-galleria>
-    <p-divider />
-    <app-task-comments-list></app-task-comments-list>
-  </p-panel>
-</div>
+
+      <p-divider></p-divider>
+
+      <!-- Описание -->
+      <p class="text-2xl font-bold text-900">Сипаттамасы</p>
+      <p>{{ task.description || "—" }}</p>
+
+      <p-divider></p-divider>
+
+      <!-- Галерея -->
+      <p class="text-2xl font-bold text-900 mb-2">Тіркемелер</p>
+      <p-galleria
+        *ngIf="images$ | async as images"
+        [value]="images"
+        [responsiveOptions]="responsiveOptions"
+        [numVisible]="5"
+        [containerStyle]="{ 'max-width': '640px' }"
+        (itemClick)="imageClick($any($event).index)"
+      >
+        <ng-template #item let-item>
+          <img [src]="item.itemImageSrc" style="width: 100%" />
+        </ng-template>
+        <ng-template #thumbnail let-item>
+          <img [src]="item.thumbnailImageSrc" class="w-5rem" />
+        </ng-template>
+      </p-galleria>
+
+      <p-divider></p-divider>
+
+      <!-- task-detail.component.html -->
+      <app-task-comments-list
+        [taskId]="task.id"
+      ></app-task-comments-list>
+    </p-panel>
+  </div>
+</ng-container>

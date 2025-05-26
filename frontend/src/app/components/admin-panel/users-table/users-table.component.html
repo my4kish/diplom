@@ -1,0 +1,125 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="card">
+  <p-table
+    #dt
+    [value]="users"
+    dataKey="id"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    [globalFilterFields]="['firstName', 'lastName', 'email', 'role']"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="{first} - {last} / {totalRecords}"
+    [rowHover]="true"
+    [(selection)]="selectedUsers"
+  >
+    <!-- Поиск и кнопка очистки -->
+    <ng-template #caption>
+      <div class="flex justify-between gap-4">
+        <p-button
+          [outlined]="true"
+          icon="pi pi-filter-slash"
+          label="Тазалау"
+          (click)="clear(dt)"
+        />
+        <p-iconField iconPosition="left">
+          <p-inputIcon><i class="pi pi-search"></i></p-inputIcon>
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchValue"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Қолданушыларды іздеу..."
+          />
+        </p-iconField>
+      </div>
+    </ng-template>
+
+    <!-- Заголовки -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox />
+        </th>
+        <th pSortableColumn="firstName">
+          Аты <p-sortIcon field="firstName" />
+          <p-columnFilter field="firstName" display="menu" />
+        </th>
+        <th pSortableColumn="lastName">
+          Тегі <p-sortIcon field="lastName" />
+          <p-columnFilter field="lastName" display="menu" />
+        </th>
+        <th pSortableColumn="email">
+          Email <p-sortIcon field="email" />
+          <p-columnFilter field="email" display="menu" />
+        </th>
+        <th pSortableColumn="role">
+          Рөлі <p-sortIcon field="role" />
+          <p-columnFilter field="role" display="menu" />
+        </th>
+        <th pSortableColumn="position">
+          Должность <p-sortIcon field="position" />
+          <p-columnFilter field="position" display="menu" />
+        </th>
+        <th style="width: 8rem">Әрекет</th>
+      </tr>
+    </ng-template>
+
+    <!-- Строки -->
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td><p-tableCheckbox [value]="user" /></td>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+
+        <!-- Роль -->
+        <td *ngIf="editUser?.id === user.id">
+          <p-dropdown
+            [options]="roleOptions"
+            [(ngModel)]="editedRole"
+            appendTo="body"
+            placeholder="Рөлін таңдаңыз"
+          />
+        </td>
+        <td *ngIf="editUser?.id !== user.id">
+          <p-tag [value]="user.role" />
+        </td>
+
+        <!-- Должность -->
+        <td *ngIf="editUser?.id === user.id">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="editedPosition"
+            placeholder="Должность"
+          />
+        </td>
+        <td *ngIf="editUser?.id !== user.id">
+          {{ user.position }}
+        </td>
+
+        <!-- Действия -->
+        <td>
+          <div class="flex gap-2">
+            <ng-container *ngIf="editUser?.id === user.id; else defaultActions">
+              <p-button icon="pi pi-check" (click)="onSave(user)" />
+              <p-button icon="pi pi-times" (click)="onCancel()" severity="danger" />
+            </ng-container>
+            <ng-template #defaultActions>
+              <p-button icon="pi pi-pencil" (click)="onEditInit(user)" />
+              <p-button icon="pi pi-trash" (click)="confirmDelete(user)" severity="danger" />
+            </ng-template>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="7">Қолданушылар табылмады.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

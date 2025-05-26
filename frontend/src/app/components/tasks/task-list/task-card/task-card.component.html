@@ -1,4 +1,4 @@
-<p-card routerLink="/task/:id" class="task-card cursor-pointer">
+<p-card routerLink="/task/{{item.id}}" class="task-card cursor-pointer">
   <div class="flex gap-8">
     <p class="task-title w-7rem mb-1 mt-0 mx-0 text-xl font-bold">{{ item.title }}</p>
     <p-chip
@@ -21,7 +21,7 @@
       <div class="flex align-items-center">
         <i class="pi pi-comment"></i>
         <p class="my-0 mx-1">
-          {{(item.comments || []).length}}
+          {{ item.comments?.length ?? 0 }}
         </p>
       </div>
       <div class="flex align-items-center">

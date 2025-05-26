@@ -1,58 +1,85 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+// src/app/components/user-profile/user-profile.component.ts
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
-import { CardModule } from 'primeng/card';
-import { PanelModule } from 'primeng/panel';
-import { ChartModule } from 'primeng/chart';
+import { PanelModule }  from 'primeng/panel';
+import { CardModule }   from 'primeng/card';
+import { ChartModule }  from 'primeng/chart';
+import { Observable, combineLatest, map, shareReplay, switchMap } from 'rxjs';
+
+import { UserService } from '../../services/user.service';
+import { TaskService } from '../../services/task.service';
+import { User }        from '../../interfaces/models/user.model';
+import { Task }        from '../../interfaces/models/task.model';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [CardModule, PanelModule, AvatarModule, ChartModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    AvatarModule,
+    PanelModule,
+    CardModule,
+    ChartModule
+  ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserProfileComponent implements OnInit {
+  private userService = inject(UserService);
+  private taskService = inject(TaskService);
+
+  public user$!: Observable<User>;
   public data: any;
   public options: any;
-  private readonly cd = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    this.initChart();
-  }
+    // 1) получаем профиль
+    this.user$ = this.userService.getCurrentUser().pipe(shareReplay(1));
 
-  initChart() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--p-text-color');
+    // 2) по профилю грузим задачи
+    const stats$ = this.user$.pipe(
+      switchMap(user => this.taskService.findByUser()),
+      map(tasks => ({
+        completed:  tasks.filter(t => t.status === 'completed').length,
+        inProgress: tasks.filter(t => t.status === 'in_progress').length,
+        overdue:    tasks.filter(t => t.status === 'overdue').length
+      })),
+      shareReplay(1)
+    );
 
-    this.data = {
-      labels: ['Орындалған', 'Жұмыс барысында', 'Мерзімі өтті'],
-      datasets: [
-        {
-          data: [3, 5, 10],
+    // 3) собираем данные для графика
+    combineLatest([stats$]).subscribe(([s]) => {
+      const style = getComputedStyle(document.documentElement);
+      const textColor = style.getPropertyValue('--p-text-color');
+      this.data = {
+        labels: ['Орындалған', 'Жұмыс барысында', 'Мерзімі өтті'],
+        datasets: [{
+          data: [s.completed, s.inProgress, s.overdue],
           backgroundColor: [
-            documentStyle.getPropertyValue('--p-cyan-500'),
-            documentStyle.getPropertyValue('--p-orange-500'),
-            documentStyle.getPropertyValue('--p-gray-500'),
+            style.getPropertyValue('--p-cyan-500'),
+            style.getPropertyValue('--p-orange-500'),
+            style.getPropertyValue('--p-gray-500')
           ],
           hoverBackgroundColor: [
-            documentStyle.getPropertyValue('--p-cyan-400'),
-            documentStyle.getPropertyValue('--p-orange-400'),
-            documentStyle.getPropertyValue('--p-gray-400'),
-          ],
-        },
-      ],
-    };
-
-    this.options = {
-      cutout: '60%',
-      plugins: {
-        legend: {
-          labels: {
-            color: textColor,
-          },
-        },
-      },
-    };
-    this.cd.markForCheck();
+            style.getPropertyValue('--p-cyan-400'),
+            style.getPropertyValue('--p-orange-400'),
+            style.getPropertyValue('--p-gray-400')
+          ]
+        }]
+      };
+      this.options = {
+        cutout: '60%',
+        plugins: {
+          legend: { labels: { color: textColor } }
+        }
+      };
+    });
   }
 }

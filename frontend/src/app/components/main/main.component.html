@@ -1,45 +1,56 @@
-<div class="flex flex-column justify-content-center pb-5">
-  <p class="flex justify-content-center mb-0 text-5xl font-bold">
-    Қош келдіңіз, {{ user.firstName }} {{ user.lastName }}
-  </p>
-  <p class="flex justify-content-center mt-1 text-xl text-500">
-    Сіздің рөліңіз: {{ user.role }} / белсенді тапсырмалар: {{ tasks.length }}
-  </p>
-  <div class="statistic-list flex gap-3 justify-content-center mb-3">
-    <p-card class="stat-card">
-      <div class="flex justify-content-center align-item-center mr-3">
-        <p-avatar icon="pi pi-check" class="mr-2 text-green-600" size="large" />
-        <div>
-          <p class="my-0 text-900">Орындалды</p>
-          <p class="my-0 text-900 font-bold">
-            {{ getTasksByStatus("completed") }}
-          </p>
+<div
+  class="flex flex-column justify-content-center pb-5"
+  *ngIf="user$ | async as user"
+>
+  <ng-container *ngIf="tasksByStatus$ | async as stat">
+    <p class="flex justify-content-center mb-0 text-5xl font-bold">
+      Қош келдіңіз, {{ user.firstName }} {{ user.lastName }}
+    </p>
+    <p class="flex justify-content-center mt-1 text-xl text-500">
+      Сіздің рөліңіз: {{ user.role }} / белсенді тапсырмалар: {{ stat.total }}
+    </p>
+
+    <div class="statistic-list flex gap-3 justify-content-center mb-3">
+      <p-card class="stat-card">
+        <div class="flex justify-content-center align-item-center mr-3">
+          <p-avatar
+            icon="pi pi-check"
+            class="mr-2 text-green-600"
+            size="large"
+          />
+          <div>
+            <p class="my-0 text-900">Орындалды</p>
+            <p class="my-0 text-900 font-bold">{{ stat.completed }}</p>
+          </div>
         </div>
-      </div>
-    </p-card>
-    <p-card class="stat-card">
-      <div class="flex justify-content-center align-item-center mr-3">
-        <p-avatar icon="pi pi-clock" class="mr-2 text-blue-600" size="large" />
-        <div>
-          <p class="my-0 text-900">Жұмыс барысында</p>
-          <p class="my-0 text-900 font-bold">
-            {{getTasksByStatus('in_progress')}}
-          </p>
+      </p-card>
+
+      <p-card class="stat-card">
+        <div class="flex justify-content-center align-item-center mr-3">
+          <p-avatar
+            icon="pi pi-clock"
+            class="mr-2 text-blue-600"
+            size="large"
+          />
+          <div>
+            <p class="my-0 text-900">Жұмыс барысында</p>
+            <p class="my-0 text-900 font-bold">{{ stat.in_progress }}</p>
+          </div>
         </div>
-      </div>
-    </p-card>
-    <p-card class="stat-card">
-      <div class="flex justify-content-center align-item-center mr-3">
-        <p-avatar icon="pi pi-times" class="mr-2 text-red-600" size="large" />
-        <div>
-          <p class="my-0 text-900">Мерзімі өткен</p>
-          <p class="my-0 text-900 font-bold">
-            {{getTasksByStatus('overdue')}}
-          </p>
+      </p-card>
+
+      <p-card class="stat-card">
+        <div class="flex justify-content-center align-item-center mr-3">
+          <p-avatar icon="pi pi-times" class="mr-2 text-red-600" size="large" />
+          <div>
+            <p class="my-0 text-900">Мерзімі өткен</p>
+            <p class="my-0 text-900 font-bold">{{ stat.overdue }}</p>
+          </div>
         </div>
-      </div>
-    </p-card>
-  </div>
+      </p-card>
+    </div>
+  </ng-container>
+
   <div class="tasks-table flex justify-content-center">
     <p-panel>
       <ng-template #header>
@@ -48,8 +59,9 @@
           <p class="m-0 text-900 font-bold text-xl">Соңғы міндеттер</p>
         </div>
       </ng-template>
+
       <p-table
-        [value]="firstFiveTasks"
+        [value]="(firstFiveTasks$ | async) || []"
         [rowHover]="true"
         [tableStyle]="{ 'min-width': '50rem' }"
       >

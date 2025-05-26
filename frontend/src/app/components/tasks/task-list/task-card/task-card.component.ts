@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Card } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { ChipModule } from 'primeng/chip';
@@ -19,6 +19,7 @@ import { AvatarModule } from 'primeng/avatar';
   ],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskCardComponent {
   @Input()

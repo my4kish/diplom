@@ -9,10 +9,16 @@ import { HeaderComponent } from './components/header/header.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, HeaderComponent, NotificationsComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    HeaderComponent,
+    NotificationsComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,13 +27,14 @@ export class AppComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   public showHeader: boolean = this.authService.isAuth;
+  private readonly userService = inject(UserService);
 
   constructor() {
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
         if (event.url === '/login' || event.url === '/register') {
           this.showHeader = false;
-        } else { 
+        } else {
           this.showHeader = true;
         }
       }
@@ -35,6 +42,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userService.getCurrentUser().subscribe();
     this.initTheme();
   }
 

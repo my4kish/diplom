@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { PanelModule } from 'primeng/panel';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  DestroyRef,
+  signal,
+  computed,
+  effect,
+} from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -8,67 +16,76 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { TaskCardComponent } from './task-card/task-card.component';
+import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
-import {
-  Dialog,
-  DialogModule,
-} from '@angular/cdk/dialog';
+import { DialogModule, Dialog } from '@angular/cdk/dialog';
+
+import { TaskCardComponent } from './task-card/task-card.component';
 import { TaskFormComponent } from '../task-form/task-form.component';
 import { TaskService } from '../../../services/task.service';
 import { Task, TaskStatus } from '../../../interfaces/models/task.model';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-task-list',
+  standalone: true,
   imports: [
     CdkDropList,
     CdkDrag,
-    PanelModule,
     CommonModule,
-    TaskCardComponent,
+    PanelModule,
     ButtonModule,
     DialogModule,
+    TaskCardComponent,
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListComponent {
-  private readonly cdr = inject(ChangeDetectorRef);
+export class TaskListComponent implements OnInit {
   private readonly taskService = inject(TaskService);
   private readonly route = inject(ActivatedRoute);
-  public projectId!: string;
-  dialog = inject(Dialog);
+  private readonly dialog = inject(Dialog);
+  private readonly destroyRef = inject(DestroyRef);
 
-  tasks: Task[] = [];
+  public readonly projectId = this.route.snapshot.paramMap.get('projectId')!;
+  private readonly tasksSignal = signal<Task[]>([]);
 
-  constructor() {
-    this.projectId = this.route.snapshot.paramMap.get('projectId')!;
-    this.taskService.findByProject(this.projectId).subscribe((list) => {
-      this.tasks = list;
-      this.cdr.markForCheck();
-    });
+  public readonly newTasks = computed(() =>
+    this.tasksSignal().filter((t) => t.status === 'new')
+  );
+  public readonly inProgress = computed(() =>
+    this.tasksSignal().filter((t) => t.status === 'in_progress')
+  );
+  public readonly completed = computed(() =>
+    this.tasksSignal().filter((t) => t.status === 'completed')
+  );
+  public readonly overdue = computed(() =>
+    this.tasksSignal().filter((t) => t.status === 'overdue')
+  );
+
+  ngOnInit(): void {
+    this.taskService
+      .findByProject(this.projectId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((tasks) => this.tasksSignal.set(tasks));
   }
 
   public openDialog(): void {
-    const dialogRef = this.dialog.open<string>(TaskFormComponent);
-
-    dialogRef.closed.subscribe();
-  }
-
-  // вместо readonly поля — геттеры
-  get newTasks(): Task[] {
-    return this.tasks.filter(t => t.status === 'new');
-  }
-  get inProgress(): Task[] {
-    return this.tasks.filter(t => t.status === 'in_progress');
-  }
-  get completed(): Task[] {
-    return this.tasks.filter(t => t.status === 'completed');
-  }
-  get overdue(): Task[] {
-    return this.tasks.filter(t => t.status === 'overdue');
+    const dialogRef = this.dialog.open(TaskFormComponent, {
+      data: { projectId: this.projectId },
+    });
+    dialogRef.closed.subscribe((taskId => {
+      const id = taskId as string | undefined;
+      if (id) {
+        // Задача была успешно создана, обновляем список
+        this.taskService
+          .findByProject(this.projectId)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((tasks) => this.tasksSignal.set(tasks));
+      }
+    }));
   }
 
   drop(event: CdkDragDrop<Task[]>): void {
@@ -79,22 +96,21 @@ export class TaskListComponent {
         event.currentIndex
       );
     } else {
-      const task     = event.previousContainer.data[event.previousIndex];
+      const task = event.previousContainer.data[event.previousIndex];
       const newStatus = event.container.id as TaskStatus;
 
-      if (task.status === newStatus) {
-        return;
-      }
-      // 1) обновляем статус на сервере
-      this.taskService.updateTask(task.id, { status: newStatus })
-        .subscribe(updated => {
-          // 2) обновляем локальный массив — новая ссылка
-          this.tasks = this.tasks.map(t =>
+      if (task.status === newStatus) return;
+
+      this.taskService
+        .updateTask(task.id, { status: newStatus })
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((updated) => {
+          const updatedTasks = this.tasksSignal().map((t) =>
             t.id === updated.id ? updated : t
           );
-          // 3) триггерим OnPush
-          this.cdr.markForCheck();
-          // 4) переносим карточку в другую колонку
+          this.tasksSignal.set(updatedTasks);
+
+          // CDK переместит элемент визуально — логика корректна
           transferArrayItem(
             event.previousContainer.data,
             event.container.data,
@@ -102,7 +118,6 @@ export class TaskListComponent {
             event.currentIndex
           );
         });
-      task.status = newStatus;
     }
   }
 }
