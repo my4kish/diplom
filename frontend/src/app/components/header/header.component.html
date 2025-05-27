@@ -1,8 +1,8 @@
 <div
-  class="flex justify-content-between align-items-center shadow-1 px-4 py-2 sticky top-0 surface-0 z-5"
+  class="flex flex-column md:flex-row justify-content-between align-items-center shadow-1 px-2 md:px-4 py-2 sticky top-0 surface-0 z-5 w-full"
 >
-  <div class="flex align-items-center gap-4">
-    <div class="logo flex">
+  <div class="flex flex-column md:flex-row align-items-center gap-2 md:gap-4 w-full md:w-auto">
+    <div class="logo flex justify-content-center md:justify-content-start w-full md:w-auto mb-2 md:mb-0">
       <!-- SVG логотип -->
       <svg
         width="80"
@@ -25,17 +25,17 @@
         <circle cx="70" cy="20" r="4" class="dot" />
       </svg>
     </div>
-    <a href="/main" class="text-xl text-900">Басты бет</a>
+    <a href="/main" class="text-xl text-900 block md:inline-block">Басты бет</a>
     <a
-      *ngIf="(user$ | async)?.role === 'user' || (user$ | async)?.role === 'poweruser' || (user$ | async)?.role === 'projectadmin'"
+      *ngIf="(user$ | async)?.role === 'superadmin' || (user$ | async)?.role === 'poweruser' || (user$ | async)?.role === 'projectadmin'"
       href="/projects"
-      class="text-xl text-900"
+      class="text-xl text-900 block md:inline-block"
       >Жобалар</a
     >
-    <a href="/all-tasks" class="text-xl text-900">Тапсырмалар</a>
+    <a href="/all-tasks" class="text-xl text-900 block md:inline-block">Тапсырмалар</a>
   </div>
 
-  <div class="flex align-items-center gap-3 py-1">
+  <div class="flex flex-row align-items-center gap-2 md:gap-3 py-1 mt-2 md:mt-0 w-full md:w-auto justify-content-center">
     <p-overlayBadge [value]="unreadCount$ | async" severity="warn">
       <p-button
         icon="pi pi-bell"
@@ -43,6 +43,7 @@
         [outlined]="true"
         [raised]="true"
         (click)="openNotifications()"
+        class="mr-1"
       ></p-button>
     </p-overlayBadge>
 
@@ -53,6 +54,7 @@
       [outlined]="true"
       [raised]="true"
       (click)="toggleDarkMode()"
+      class="mr-1"
     ></p-button>
 
     <p-button
@@ -63,6 +65,7 @@
       [outlined]="true"
       [raised]="true"
       (click)="router.navigate(['/admin'])"
+      class="mr-1"
     ></p-button>
 
     <div class="card relative">

@@ -41,6 +41,8 @@ export class HeaderComponent implements OnInit {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   public router = inject(Router);
+  showMobileMenu = false;
+  isMobile(): boolean { return window.innerWidth < 768; }
 
   /** Текущий пользователь */
   public user$: Observable<User | null> = this.userService.currentUser$;

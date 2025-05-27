@@ -1,4 +1,5 @@
-
-<app-header *ngIf="showHeader"></app-header>
+<ng-container *ngIf="showHeader$ | async as show">
+  <app-header *ngIf="show"></app-header>
+</ng-container>
 <router-outlet></router-outlet>
 <app-notifications></app-notifications>

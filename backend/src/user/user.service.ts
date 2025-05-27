@@ -127,7 +127,19 @@ export class UserService {
   }
 
   async remove(id: string) {
-    return this.prisma.user.delete({ where: { id } });
+    // Удалить/обновить связанные записи вручную
+    await this.prisma.task.deleteMany({
+      where: { assignedToId: id },
+    });
+
+    await this.prisma.comment.deleteMany({
+      where: { authorId: id },
+    });
+
+    // После этого удаляем пользователя
+    return this.prisma.user.delete({
+      where: { id },
+    });
   }
 
   async getCurrentUser(userId: string) {

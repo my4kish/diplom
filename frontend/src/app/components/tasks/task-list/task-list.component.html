@@ -1,7 +1,7 @@
 <div class="kanban">
-  <div class="kanban-container flex flex-wrap gap-3">
+  <div class="kanban-container flex flex-column md:flex-row flex-wrap gap-3 justify-content-center">
     <!-- Новые -->
-    <p-panel>
+    <p-panel class="flex-1 min-w-18rem max-w-22rem">
       <ng-template #header>
         <div class="flex align-items-center justify-content-between w-full">
           <p class="text-900 m-0 font-bold">Жаңа</p>
@@ -15,7 +15,7 @@
         </div>
       </ng-template>
       <div
-        class="kanban-column"
+        class="kanban-column min-h-20rem flex flex-column gap-2"
         id="new"
         cdkDropList
         #newList="cdkDropList"
@@ -24,7 +24,7 @@
         (cdkDropListDropped)="drop($event)"
       >
         @for (item of newTasks(); track item.id) {
-          <div class="task-box" cdkDrag>
+          <div class="task-box mb-2" cdkDrag>
             <app-task-card [item]="item"></app-task-card>
           </div>
         }
@@ -32,12 +32,12 @@
     </p-panel>
 
     <!-- В работе -->
-    <p-panel>
+    <p-panel class="flex-1 min-w-18rem max-w-22rem">
       <ng-template #header>
         <p class="text-900 m-0 font-bold">Жұмыс барысында</p>
       </ng-template>
       <div
-        class="kanban-column"
+        class="kanban-column min-h-20rem flex flex-column gap-2"
         id="in_progress"
         cdkDropList
         #inProgressList="cdkDropList"
@@ -46,7 +46,7 @@
         (cdkDropListDropped)="drop($event)"
       >
         @for (item of inProgress(); track item.id) {
-          <div class="task-box" cdkDrag>
+          <div class="task-box mb-2" cdkDrag>
             <app-task-card [item]="item"></app-task-card>
           </div>
         }
@@ -54,12 +54,12 @@
     </p-panel>
 
     <!-- Завершенные -->
-    <p-panel>
+    <p-panel class="flex-1 min-w-18rem max-w-22rem">
       <ng-template #header>
         <p class="text-900 m-0 font-bold">Орындалды</p>
       </ng-template>
       <div
-        class="kanban-column"
+        class="kanban-column min-h-20rem flex flex-column gap-2"
         id="completed"
         cdkDropList
         #completedList="cdkDropList"
@@ -68,7 +68,7 @@
         (cdkDropListDropped)="drop($event)"
       >
         @for (item of completed(); track item.id) {
-          <div class="task-box" cdkDrag>
+          <div class="task-box mb-2" cdkDrag>
             <app-task-card [item]="item"></app-task-card>
           </div>
         }
@@ -76,12 +76,12 @@
     </p-panel>
 
     <!-- Просроченные -->
-    <p-panel>
+    <p-panel class="flex-1 min-w-18rem max-w-22rem">
       <ng-template #header>
         <p class="text-900 m-0 font-bold">Мерзімі өтті</p>
       </ng-template>
       <div
-        class="kanban-column"
+        class="kanban-column min-h-20rem flex flex-column gap-2"
         id="overdue"
         cdkDropList
         #overdueList="cdkDropList"
@@ -90,7 +90,7 @@
         (cdkDropListDropped)="drop($event)"
       >
         @for (item of overdue(); track item.id) {
-          <div class="task-box" cdkDrag>
+          <div class="task-box mb-2" cdkDrag>
             <app-task-card [item]="item"></app-task-card>
           </div>
         }

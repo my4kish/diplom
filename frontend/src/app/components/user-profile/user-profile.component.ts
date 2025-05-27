@@ -10,12 +10,12 @@ import { AvatarModule } from 'primeng/avatar';
 import { PanelModule }  from 'primeng/panel';
 import { CardModule }   from 'primeng/card';
 import { ChartModule }  from 'primeng/chart';
-import { Observable, combineLatest, map, shareReplay, switchMap } from 'rxjs';
+import { Observable, of, switchMap, map, shareReplay } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 import { UserService } from '../../services/user.service';
 import { TaskService } from '../../services/task.service';
-import { User }        from '../../interfaces/models/user.model';
-import { Task }        from '../../interfaces/models/task.model';
+import { User } from '../../interfaces/models/user.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -34,52 +34,59 @@ import { Task }        from '../../interfaces/models/task.model';
 export class UserProfileComponent implements OnInit {
   private userService = inject(UserService);
   private taskService = inject(TaskService);
+  private route = inject(ActivatedRoute);
 
-  public user$!: Observable<User>;
-  public data: any;
-  public options: any;
+  public vm$!: Observable<{
+    user: User;
+    chartData: any;
+    chartOptions: any;
+  } | null>;
 
   ngOnInit(): void {
-    // 1) получаем профиль
-    this.user$ = this.userService.getCurrentUser().pipe(shareReplay(1));
-
-    // 2) по профилю грузим задачи
-    const stats$ = this.user$.pipe(
-      switchMap(user => this.taskService.findByUser()),
-      map(tasks => ({
-        completed:  tasks.filter(t => t.status === 'completed').length,
-        inProgress: tasks.filter(t => t.status === 'in_progress').length,
-        overdue:    tasks.filter(t => t.status === 'overdue').length
-      })),
+    this.vm$ = this.route.paramMap.pipe(
+      map(params => params.get('userId')),
+      switchMap(id => id ? this.userService.getById(id) : of(null)),
+      switchMap(user => {
+        if (!user || !user.id) return of(null);
+        return this.taskService.findByUserId(user.id).pipe(
+          map(tasks => {
+            const completed = tasks.filter(t => t.status === 'completed').length;
+            const inProgress = tasks.filter(t => t.status === 'in_progress').length;
+            const overdue = tasks.filter(t => t.status === 'overdue').length;
+            const style = getComputedStyle(document.documentElement);
+            return {
+              user,
+              chartData: {
+                labels: ['Орындалған', 'Жұмыс барысында', 'Мерзімі өтті'],
+                datasets: [{
+                  data: [completed, inProgress, overdue],
+                  backgroundColor: [
+                    style.getPropertyValue('--p-cyan-500'),
+                    style.getPropertyValue('--p-orange-500'),
+                    style.getPropertyValue('--p-gray-500')
+                  ],
+                  hoverBackgroundColor: [
+                    style.getPropertyValue('--p-cyan-400'),
+                    style.getPropertyValue('--p-orange-400'),
+                    style.getPropertyValue('--p-gray-400')
+                  ]
+                }]
+              },
+              chartOptions: {
+                cutout: '60%',
+                plugins: {
+                  legend: {
+                    labels: {
+                      color: style.getPropertyValue('--p-text-color')
+                    }
+                  }
+                }
+              }
+            };
+          })
+        );
+      }),
       shareReplay(1)
     );
-
-    // 3) собираем данные для графика
-    combineLatest([stats$]).subscribe(([s]) => {
-      const style = getComputedStyle(document.documentElement);
-      const textColor = style.getPropertyValue('--p-text-color');
-      this.data = {
-        labels: ['Орындалған', 'Жұмыс барысында', 'Мерзімі өтті'],
-        datasets: [{
-          data: [s.completed, s.inProgress, s.overdue],
-          backgroundColor: [
-            style.getPropertyValue('--p-cyan-500'),
-            style.getPropertyValue('--p-orange-500'),
-            style.getPropertyValue('--p-gray-500')
-          ],
-          hoverBackgroundColor: [
-            style.getPropertyValue('--p-cyan-400'),
-            style.getPropertyValue('--p-orange-400'),
-            style.getPropertyValue('--p-gray-400')
-          ]
-        }]
-      };
-      this.options = {
-        cutout: '60%',
-        plugins: {
-          legend: { labels: { color: textColor } }
-        }
-      };
-    });
   }
 }

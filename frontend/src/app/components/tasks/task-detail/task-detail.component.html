@@ -1,15 +1,15 @@
 <!-- src/app/components/tasks/task-detail/task-detail.component.html -->
 <ng-container *ngIf="task$ | async as task">
-  <div class="flex justify-content-center m-5">
-    <p-panel class="max-w-min w-full" [style]="{ 'max-width': '800px' }">
+  <div class="flex flex-column align-items-center justify-content-center min-h-screen m-2 md:m-5">
+    <p-panel [style]="{ 'max-width': '800px', 'width': '100%' }">
       <!-- Заголовок -->
-      <p class="text-4xl font-bold mt-0 text-900">{{ task.title }}</p>
+      <p class="text-3xl md:text-4xl font-bold mt-0 text-900 text-center">{{ task.title }}</p>
 
       <!-- Инфо-блок -->
-      <div class="flex gap-8 mb-4">
+      <div class="flex flex-column md:flex-row flex-wrap gap-4 md:gap-8 mb-4 w-full justify-content-center">
         <!-- Статус -->
-        <div class="flex flex-column gap-2">
-          <p class="m-0 text-xl text-500">Мәртебесі</p>
+        <div class="flex flex-column gap-2 align-items-center md:align-items-start">
+          <p class="m-0 text-lg md:text-xl text-500">Мәртебесі</p>
           <p-tag
             [value]="switchStatus(task.status!)"
             [severity]="getSeverity(task.status!)"
@@ -17,39 +17,39 @@
         </div>
 
         <!-- Исполнитель -->
-        <div class="flex flex-column gap-2">
-          <p class="m-0 text-xl text-500">Орындаушы</p>
+        <div class="flex flex-column gap-2 align-items-center md:align-items-start">
+          <p class="m-0 text-lg md:text-xl text-500">Орындаушы</p>
           <div class="flex align-items-center gap-2">
             <ng-container *ngIf="task.assignedTo; else noUser">
               <p-avatar
                 [image]="task.assignedTo.avatarUrl"
                 shape="circle"
               ></p-avatar>
-              <p class="m-0 text-xl text-900">
+              <p class="m-0 text-lg md:text-xl text-900">
                 {{ task.assignedTo.firstName }}
                 {{ task.assignedTo.lastName }}
               </p>
             </ng-container>
             <ng-template #noUser>
               <p-avatar icon="pi pi-user"></p-avatar>
-              <p class="m-0 text-xl text-900">—</p>
+              <p class="m-0 text-lg md:text-xl text-900">—</p>
             </ng-template>
           </div>
         </div>
 
         <!-- Дата -->
-        <div class="flex flex-column gap-2">
-          <p class="m-0 text-xl text-500">Орындау мерзімі</p>
+        <div class="flex flex-column gap-2 align-items-center md:align-items-start">
+          <p class="m-0 text-lg md:text-xl text-500">Орындау мерзімі</p>
           @if (task.dueDate) {
-          <p class="m-0 text-xl text-900">
+          <p class="m-0 text-lg md:text-xl text-900">
             {{ task.dueDate | date : "d MMM, y" }}
           </p>
           } @else { — }
         </div>
 
         <!-- Приоритет -->
-        <div class="flex flex-column gap-2">
-          <p class="m-0 text-xl text-500">Басымдық</p>
+        <div class="flex flex-column gap-2 align-items-center md:align-items-start">
+          <p class="m-0 text-lg md:text-xl text-500">Басымдық</p>
           <p-tag
             [value]="task.priority"
             [severity]="
@@ -66,13 +66,13 @@
       <p-divider></p-divider>
 
       <!-- Описание -->
-      <p class="text-2xl font-bold text-900">Сипаттамасы</p>
-      <p>{{ task.description || "—" }}</p>
+      <p class="text-xl md:text-2xl font-bold text-900">Сипаттамасы</p>
+      <p class="text-base md:text-lg">{{ task.description || "—" }}</p>
 
       <p-divider></p-divider>
 
       <!-- Галерея -->
-      <p class="text-2xl font-bold text-900 mb-2">Тіркемелер</p>
+      <p class="text-xl md:text-2xl font-bold text-900 mb-2">Тіркемелер</p>
       <p-galleria
         *ngIf="images$ | async as images"
         [value]="images"
@@ -82,7 +82,7 @@
         (itemClick)="imageClick($any($event).index)"
       >
         <ng-template #item let-item>
-          <img [src]="item.itemImageSrc" style="width: 100%" />
+          <img [src]="item.itemImageSrc" class="w-full" />
         </ng-template>
         <ng-template #thumbnail let-item>
           <img [src]="item.thumbnailImageSrc" class="w-5rem" />

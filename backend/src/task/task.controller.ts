@@ -33,15 +33,15 @@ export class TaskController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 5000000 }), // до 5МБ на файл
-          new FileTypeValidator({ fileType: 'image/' }),   // только изображения
+          new FileTypeValidator({ fileType: 'image/' }), // только изображения
         ],
         fileIsRequired: false,
       }),
-    ) files: Express.Multer.File[],
+    )
+    files: Express.Multer.File[],
   ) {
     return this.taskService.create(createTaskDto, files);
   }
-
 
   @Get()
   findAll() {
@@ -52,6 +52,11 @@ export class TaskController {
   findByUser(@Request() req) {
     const userId = req.user.userId;
     return this.taskService.findByUser(userId);
+  }
+
+  @Get('/user/:id')
+  findByUserId(@Param('id') id: string) {
+    return this.taskService.findByUser(id);
   }
 
   @Get(':id')

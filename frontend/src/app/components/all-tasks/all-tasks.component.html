@@ -1,7 +1,7 @@
-<div class="tasks-table flex justify-content-center mt-8">
-  <p-panel>
+<div class="tasks-table flex flex-column md:flex-row justify-content-center mt-8 px-2 md:px-6">
+  <p-panel class="w-full md:w-10">
     <ng-template #header>
-      <div class="flex align-items-center gap-2 ml-3">
+      <div class="flex align-items-center gap-2 ml-0 md:ml-3">
         <i class="pi pi-file-o text-xl font-bold"></i>
         <p class="m-0 text-900 font-bold text-xl">Барлық тапсырмалар</p>
       </div>
@@ -10,22 +10,23 @@
     <p-table
       [value]="(tasks$ | async) ?? []"
       [rowHover]="true"
-      [tableStyle]="{ 'min-width': '100rem'}"
+      [tableStyle]="{ 'min-width': '100%', 'width': '100%' }"
+      class="w-full"
     >
       <ng-template pTemplate="header">
         <tr>
-          <th>Тапсырма</th>
-          <th>Мәртебесі</th>
-          <th>Жоба</th>
-          <th>Құрылды</th>
-          <th>Басымдық</th>
+          <th class="text-sm md:text-base">Тапсырма</th>
+          <th class="text-sm md:text-base">Мәртебесі</th>
+          <th class="text-sm md:text-base">Жоба</th>
+          <th class="text-sm md:text-base">Құрылды</th>
+          <th class="text-sm md:text-base">Басымдық</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-task>
-        <tr [routerLink]="['/task', task.id]" class="cursor-pointer">
-          <td>{{ task.title }}</td>
-          <td>
+        <tr [routerLink]="['/task', task.id]" class="cursor-pointer hover:bg-primary-50 transition-colors">
+          <td class="text-xs md:text-base">{{ task.title }}</td>
+          <td class="text-xs md:text-base">
             <div class="flex align-items-center gap-2">
               <p-tag
                 [value]="switchStatus(task.status)"
@@ -43,9 +44,9 @@
               ></button>
             </div>
           </td>
-          <td>{{ task.project.name }}</td>
-          <td>{{ task.createdAt | date: 'medium' }}</td>
-          <td>{{ task.priority }}</td>
+          <td class="text-xs md:text-base">{{ task.project.name }}</td>
+          <td class="text-xs md:text-base">{{ task.createdAt | date: 'medium' }}</td>
+          <td class="text-xs md:text-base">{{ task.priority }}</td>
         </tr>
       </ng-template>
     </p-table>

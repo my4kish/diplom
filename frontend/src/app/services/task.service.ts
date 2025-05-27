@@ -90,4 +90,11 @@ export class TaskService extends ApiService<Task> {
       })
     );
   }
+
+  /**
+   * Получить задачи по id пользователя
+   */
+  findByUserId(userId: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.apiUrl}/${this.path}/user/${userId}`);
+  }
 }

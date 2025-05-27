@@ -1,70 +1,60 @@
 <!-- src/app/components/user-profile/user-profile.component.html -->
-<div class="m-3 flex justify-content-center gap-4">
-  <div class="flex flex-column gap-4">
-    <!-- Фотография и имя -->
-    <p-panel [showHeader]="false">
-      <div class="flex flex-wrap gap-3 align-items-center mt-4">
-        <ng-container *ngIf="user$ | async as user">
+<ng-container *ngIf="vm$ | async as vm">
+  <div class="m-3 flex flex-column lg:flex-row flex-wrap justify-content-center gap-4">
+    <div class="flex flex-column gap-4 w-full lg:w-20rem">
+      <p-panel [showHeader]="false">
+        <div class="flex flex-wrap gap-3 align-items-center mt-4">
           <p-avatar
-            [image]="user.avatarUrl"
+            [image]="vm.user.avatarUrl"
             class="mr-2 max-w-10rem max-h-10rem min-w-min w-full h-full"
             size="xlarge"
             shape="circle"
           ></p-avatar>
           <div class="flex flex-column">
             <p class="mx-0 my-1 text-xl font-bold">
-              {{ user.firstName }} {{ user.lastName }}
+              {{ vm.user.firstName }} {{ vm.user.lastName }}
             </p>
-            <p class="mx-0 my-1 text-500">Рөлі: {{ user.role }}</p>
-            <p class="mx-0 my-1 text-500">Лауазымы: {{ user.position }}</p>
+            <p class="mx-0 my-1 text-500">Рөлі: {{ vm.user.role }}</p>
+            <p class="mx-0 my-1 text-500">Лауазымы: {{ vm.user.position || '---' }}</p>
           </div>
-        </ng-container>
-      </div>
-    </p-panel>
+        </div>
+      </p-panel>
 
-    <!-- Общая информация -->
-    <p-panel [showHeader]="false">
-      <div class="mt-4">
-        <p class="mx-4 my-0 text-2xl font-bold">Жалпы ақпарат</p>
-        <ng-container *ngIf="user$ | async as user">
-          <p class="mx-4 my-1 text-justify">Қала: {{ user.city }}</p>
-          <p class="mx-4 my-1 text-justify">Жынысы: {{ user.gender }}</p>
-        </ng-container>
-      </div>
-    </p-panel>
+      <p-panel [showHeader]="false">
+        <div class="mt-4">
+          <p class="mx-4 my-0 text-2xl font-bold">Жалпы ақпарат</p>
+          <p class="mx-4 my-1 text-justify">Қала: {{ vm.user.city }}</p>
+          <p class="mx-4 my-1 text-justify">Жынысы: {{ vm.user.gender }}</p>
+        </div>
+      </p-panel>
 
-    <!-- Контакты -->
-    <p-panel [showHeader]="false">
-      <div class="mt-4">
-        <p class="mx-4 my-0 text-2xl font-bold">Байланыс</p>
-        <ng-container *ngIf="user$ | async as user">
-          <p class="mx-4 my-1 text-justify">Телефон нөмірі: {{ user.phone }}</p>
-          <p class="mx-4 my-1 text-justify">Email: {{ user.email }}</p>
-        </ng-container>
-      </div>
-    </p-panel>
-  </div>
-
-  <!-- Обо мне -->
-  <p-panel>
-    <div class="max-w-30rem">
-      <p class="mx-4 my-0 text-2xl font-bold">Мен туралы</p>
-      <ng-container *ngIf="user$ | async as user">
-        <p class="description m-4 text-justify">{{ user.aboutMe }}</p>
-      </ng-container>
+      <p-panel [showHeader]="false">
+        <div class="mt-4">
+          <p class="mx-4 my-0 text-2xl font-bold">Байланыс</p>
+          <p class="mx-4 my-1 text-justify">Телефон нөмірі:</p>
+          <p class="mx-4 my-1 text-justify">{{ vm.user.phone }}</p>
+          <p class="mx-4 my-1 text-justify">Email: {{ vm.user.email }}</p>
+        </div>
+      </p-panel>
     </div>
-  </p-panel>
 
-  <!-- Диаграмма -->
-  <p-panel [showHeader]="false">
-    <div class="mt-4">
-      <p class="mx-4 mt-0 text-2xl font-bold">Тапсырмалары</p>
-      <p-chart
-        [data]="data"
-        [options]="options"
-        type="doughnut"
-        class="w-full md:w-[30rem]"
-      ></p-chart>
+      <p-panel>
+        <div class="max-w-30rem w-full">
+          <p class="mx-4 my-0 text-2xl font-bold">Мен туралы</p>
+          <p class="description m-4 text-justify">{{ vm.user.aboutMe }}</p>
+        </div>
+      </p-panel>
+
+      <p-panel [showHeader]="false">
+        <div class="mt-4">
+          <p class="mx-4 mt-0 text-2xl font-bold">Тапсырмалары</p>
+          <p-chart
+            [data]="vm.chartData"
+            [options]="vm.chartOptions"
+            type="doughnut"
+            class="w-full md:w-[30rem]"
+          ></p-chart>
+        </div>
+      </p-panel>
     </div>
-  </p-panel>
-</div>
+</ng-container>

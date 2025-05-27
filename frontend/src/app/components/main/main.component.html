@@ -3,16 +3,12 @@
   *ngIf="user$ | async as user"
 >
   <ng-container *ngIf="tasksByStatus$ | async as stat">
-    <p class="flex justify-content-center mb-0 text-5xl font-bold">
-      Қош келдіңіз, {{ user.firstName }} {{ user.lastName }}
-    </p>
-    <p class="flex justify-content-center mt-1 text-xl text-500">
-      Сіздің рөліңіз: {{ user.role }} / белсенді тапсырмалар: {{ stat.total }}
-    </p>
+    <p class="flex justify-content-center mb-0 text-3xl md:text-5xl font-bold text-center">Қош келдіңіз, {{ user.firstName }} {{ user.lastName }}</p>
+    <p class="flex justify-content-center mt-1 text-lg md:text-xl text-500 text-center">Сіздің рөліңіз: {{ user.role }} / белсенді тапсырмалар: {{ stat.total }}</p>
 
-    <div class="statistic-list flex gap-3 justify-content-center mb-3">
-      <p-card class="stat-card">
-        <div class="flex justify-content-center align-item-center mr-3">
+    <div class="statistic-list flex flex-column sm:flex-row gap-2 md:gap-3 justify-content-center mb-3 w-full">
+      <p-card class="stat-card w-full sm:w-20rem md:w-18rem">
+        <div class="flex justify-content-center align-items-center mr-3">
           <p-avatar
             icon="pi pi-check"
             class="mr-2 text-green-600"
@@ -25,8 +21,8 @@
         </div>
       </p-card>
 
-      <p-card class="stat-card">
-        <div class="flex justify-content-center align-item-center mr-3">
+      <p-card class="stat-card w-full sm:w-20rem md:w-18rem">
+        <div class="flex justify-content-center align-items-center mr-3">
           <p-avatar
             icon="pi pi-clock"
             class="mr-2 text-blue-600"
@@ -39,8 +35,8 @@
         </div>
       </p-card>
 
-      <p-card class="stat-card">
-        <div class="flex justify-content-center align-item-center mr-3">
+      <p-card class="stat-card w-full sm:w-20rem md:w-18rem">
+        <div class="flex justify-content-center align-items-center mr-3">
           <p-avatar icon="pi pi-times" class="mr-2 text-red-600" size="large" />
           <div>
             <p class="my-0 text-900">Мерзімі өткен</p>
@@ -51,10 +47,10 @@
     </div>
   </ng-container>
 
-  <div class="tasks-table flex justify-content-center">
-    <p-panel>
+  <div class="tasks-table flex flex-column md:flex-row justify-content-center w-full">
+    <p-panel class="w-full md:w-10">
       <ng-template #header>
-        <div class="flex align-items-center gap-2 ml-3">
+        <div class="flex align-items-center gap-2 ml-0 md:ml-3">
           <i class="pi pi-clock text-xl font-bold"></i>
           <p class="m-0 text-900 font-bold text-xl">Соңғы міндеттер</p>
         </div>
@@ -63,27 +59,28 @@
       <p-table
         [value]="(firstFiveTasks$ | async) || []"
         [rowHover]="true"
-        [tableStyle]="{ 'min-width': '50rem' }"
+        [tableStyle]="{ 'min-width': '100%', 'width': '100%' }"
+        class="w-full"
       >
         <ng-template pTemplate="header">
           <tr>
-            <th>Тапсырма</th>
-            <th>Мәртебесі</th>
-            <th>Жоба</th>
-            <th>Басымдық</th>
+            <th class="text-xs md:text-base">Тапсырма</th>
+            <th class="text-xs md:text-base">Мәртебесі</th>
+            <th class="text-xs md:text-base">Жоба</th>
+            <th class="text-xs md:text-base">Басымдық</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-task>
           <tr routerLink="/task/{{ task.id }}" class="cursor-pointer">
-            <td>{{ task.title }}</td>
-            <td>
+            <td class="text-xs md:text-base">{{ task.title }}</td>
+            <td class="text-xs md:text-base">
               <p-tag
                 [value]="switchStatus(task.status)"
                 [severity]="getSeverity(task.status)"
               />
             </td>
-            <td>{{ task.project.name }}</td>
-            <td>{{ task.priority }}</td>
+            <td class="text-xs md:text-base">{{ task.project.name }}</td>
+            <td class="text-xs md:text-base">{{ task.priority }}</td>
           </tr>
         </ng-template>
       </p-table>
